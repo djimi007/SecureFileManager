@@ -1,31 +1,61 @@
-import { StyleSheet } from 'react-native';
+import { useIsFocused } from "@react-navigation/native";
+import { Link } from "expo-router";
+import { useEffect, useRef, useState } from "react";
+import { StyleSheet, Text, View, SafeAreaView } from "react-native";
+import { useAppState } from "@react-native-community/hooks";
+import {
+  Camera,
+  CameraPosition,
+  useCameraDevice,
+  useCameraPermission,
+  useMicrophonePermission,
+} from "react-native-vision-camera";
 
-import EditScreenInfo from '../../components/EditScreenInfo';
-import { Text, View } from '../../components/Themed';
+export default function Page() {
+  const isFocused = useIsFocused();
+  const appState = useAppState();
+  const isActive = isFocused && appState === "active";
+  const [postition, setPosition] = useState<CameraPosition>("back");
 
-export default function TabTwoScreen() {
+  const getCamPermission = async () => {
+    const { hasPermission, requestPermission } = useCameraPermission();
+    if (!!!hasPermission) {
+      await requestPermission();
+      return;
+    }
+  };
+
+  const getMicPermission = async () => {
+    const { hasPermission, requestPermission } = useMicrophonePermission();
+    if (!hasPermission) {
+      await requestPermission();
+      return;
+    }
+  };
+
+  getCamPermission();
+  // getMicPermission();
+
+  const device = useCameraDevice(postition);
+
+  if (device == null)
+    return (
+      <View style={{ alignItems: "center", justifyContent: "center" }}>
+        <Text style={{ fontSize: 20 }}>
+          no camera device in this phone
+        </Text>
+      </View>
+    );
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/two.tsx" />
-    </View>
+    <SafeAreaView style={{ flex: 1 }}>
+      <Camera
+        exposure={2}
+        enableHighQualityPhotos
+        style={StyleSheet.absoluteFill}
+        device={device}
+        isActive={isActive}
+      />
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
-  },
-});

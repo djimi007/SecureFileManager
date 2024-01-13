@@ -1,0 +1,40 @@
+{
+  "cli": {
+    "version": ">= 5.9.2"
+  },
+  "build": {
+    "dev": {
+      "distribution": "internal",
+      "android": {
+        "gradleCommand": ":app:assembleDebug"
+      },
+      "ios": {
+        "buildConfiguration": "Debug"
+      },
+      "channel": "dev"
+    },
+    "main" : {
+    
+      "distribution": "internal",
+"channel": "main",
+"android":{ 
+  "buildType": "apk"
+}
+
+    }, 
+    "preview": {
+      "android":{ 
+  "buildType": "apk"
+},
+      "distribution": "internal",
+      "channel": "preview"
+    },
+    "production": {
+      "channel": "production"
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}
+//eas update:channel:rollout --channel main
