@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { View, Button } from "react-native";
 import * as Updates from "expo-updates";
+import { StatusBar } from "expo-status-bar";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -75,6 +76,7 @@ function RootLayoutNav() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="(page)" options={{ headerShown: false }} />
+        <Stack.Screen name="(welcome)" options={{ headerShown: false }} />
       </Stack>
     </ThemeProvider>
   );

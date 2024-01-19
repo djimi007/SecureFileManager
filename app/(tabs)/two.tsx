@@ -34,7 +34,7 @@ export default function Page() {
   };
 
   getCamPermission();
-  // getMicPermission();
+  getMicPermission();
 
   const device = useCameraDevice(postition);
 
@@ -50,11 +50,13 @@ export default function Page() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Camera
-        exposure={2}
+        focusable
         enableHighQualityPhotos
         style={StyleSheet.absoluteFill}
         device={device}
         isActive={isActive}
+        photo
+        video
       />
     </SafeAreaView>
   );

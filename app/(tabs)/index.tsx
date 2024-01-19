@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text, Pressable } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Text,
+  Pressable,
+  ToastAndroid,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -8,16 +16,25 @@ import Animated, {
 } from "react-native-reanimated";
 
 import * as RNFS from "react-native-fs";
+import * as MediaLibrary from "expo-media-library";
+import { router } from "expo-router";
 
 export default function App() {
   const [path, setPath] = useState("");
   const [files, setFiles] = useState<RNFS.ReadDirItem[]>([]);
   const initialPath =
     RNFS.ExternalStorageDirectoryPath + "/Pictures/Progallery";
+  const [permissionResponse, requestPermission] =
+    MediaLibrary.usePermissions();
+
+  // if (!permissionResponse?.granted) return;
   const readFromDir = async () => {
     setFiles(await RNFS.readDir(initialPath));
+    if (Platform.OS === "android") {
+      router.push("/(welcome)/welcome");
+    }
   };
-  const offset = useSharedValue(200);
+  const offset = useSharedValue(150);
 
   const animatedStyles = useAnimatedStyle(() => ({
     transform: [{ translateX: offset.value }],
@@ -33,9 +50,9 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Pressable onPress={readFromDir}>
-        <Text>click me</Text>
-      </Pressable>
+      <TouchableOpacity onPress={readFromDir}>
+        <Text style={{ fontSize: 20, margin: 5 }}>click me</Text>
+      </TouchableOpacity>
       <Animated.View style={[styles.box, animatedStyles]} />
     </View>
   );
