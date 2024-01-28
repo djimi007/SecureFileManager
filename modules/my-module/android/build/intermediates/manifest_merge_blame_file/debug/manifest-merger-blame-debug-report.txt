@@ -1,0 +1,12 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    xmlns:tools="http://schemas.android.com/tools"
+4    package="com.mohamed.fine.ProGallery" >
+5
+6    <uses-sdk android:minSdkVersion="23" />
+7
+8    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+8-->C:\Users\Djimi\Desktop\expo\ProGallery\modules\my-module\android\src\main\AndroidManifest.xml:3:1-77
+8-->C:\Users\Djimi\Desktop\expo\ProGallery\modules\my-module\android\src\main\AndroidManifest.xml:3:18-75
+9
+10</manifest>

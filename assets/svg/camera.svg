@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="800" height="800" version="1.1" viewBox="0 0 800.00001 800.00001" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <mask id="c" maskUnits="userSpaceOnUse">
+   <circle cx="400" cy="652.36" r="400" color="#000000" color-rendering="auto" fill="#fff" image-rendering="auto" shape-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+  </mask>
+  <mask id="b" maskUnits="userSpaceOnUse">
+   <circle cx="400" cy="652.36" r="400" color="#000000" color-rendering="auto" fill="#fff" image-rendering="auto" shape-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+  </mask>
+  <mask id="a" maskUnits="userSpaceOnUse">
+   <circle cx="400" cy="400" r="400" color="#000000" color-rendering="auto" fill="#fff" image-rendering="auto" shape-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+  </mask>
+  <linearGradient id="d" x1="462.46" x2="97.149" y1="314.31" y2="665.85" gradientUnits="userSpaceOnUse">
+   <stop offset="0"/>
+   <stop stop-opacity="0" offset="1"/>
+  </linearGradient>
+ </defs>
+ <g transform="translate(0 -252.36)" shape-rendering="auto">
+  <circle cx="400" cy="652.36" r="400" color="#000000" color-rendering="auto" fill="#1c8adb" image-rendering="auto" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+  <path transform="translate(0 252.36)" d="m157.4 224.34c-7.079 0-13.395 3.1345-17.656 8.0918l-139.44 139.44c-8.6956 372.5 157.81 431.29 404.67 428.11l252.79-252.79c4.9572-4.2598 8.0918-10.575 8.0918-17.654v-281.93c0-12.889-10.376-23.266-23.266-23.266z" color="#000000" color-rendering="auto" fill="url(#d)" image-rendering="auto" mask="url(#a)" opacity=".42" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+  <path d="m157.4 476.71c-12.889 0-23.267 10.376-23.267 23.265v281.93c0 12.889 10.378 23.265 23.267 23.265h485.2c12.889 0 23.265-10.376 23.265-23.265v-281.93c0-12.889-10.376-23.265-23.265-23.265h-485.2zm385.66 23.248h79.878c9.5771 0 17.287 7.7098 17.287 17.287 0 9.5771-7.7098 17.289-17.287 17.289h-79.878c-9.5771 0-17.287-7.7119-17.287-17.289s7.7097-17.287 17.287-17.287zm-142.47 5.3644a134.72 134.72 0 0 1 134.72 134.72 134.72 134.72 0 0 1 -134.72 134.72 134.72 134.72 0 0 1 -134.72 -134.72 134.72 134.72 0 0 1 134.72 -134.72z" color="#000000" color-rendering="auto" fill="#fff" image-rendering="auto" mask="url(#b)" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+  <circle cx="400.6" cy="640.04" r="84.051" color="#000000" color-rendering="auto" fill="#fff" image-rendering="auto" mask="url(#c)" solid-color="#000000" style="isolation:auto;mix-blend-mode:normal"/>
+ </g>
+</svg>

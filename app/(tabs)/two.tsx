@@ -17,24 +17,26 @@ export default function Page() {
   const isActive = isFocused && appState === "active";
   const [postition, setPosition] = useState<CameraPosition>("back");
 
-  const getCamPermission = async () => {
-    const { hasPermission, requestPermission } = useCameraPermission();
-    if (!!!hasPermission) {
-      await requestPermission();
-      return;
-    }
-  };
+  const {
+    hasPermission: hasCamPermission,
+    requestPermission: requestCamPermission,
+  } = useCameraPermission();
 
-  const getMicPermission = async () => {
-    const { hasPermission, requestPermission } = useMicrophonePermission();
-    if (!hasPermission) {
-      await requestPermission();
-      return;
-    }
-  };
+  const {
+    hasPermission: hasMicPermission,
+    requestPermission: requestMicPermission,
+  } = useMicrophonePermission();
 
-  getCamPermission();
-  getMicPermission();
+  useEffect(() => {
+    const askPermission = async () => {
+      if (!hasCamPermission) {
+        return await requestCamPermission();
+      }
+      if (!hasMicPermission) return await requestMicPermission();
+    };
+
+    askPermission();
+  }, [hasCamPermission, hasMicPermission]);
 
   const device = useCameraDevice(postition);
 
