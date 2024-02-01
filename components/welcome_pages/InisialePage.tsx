@@ -1,15 +1,15 @@
 import LottieView from "lottie-react-native";
 import { View, StyleSheet } from "react-native";
-import { AnimatedText } from "../utils/animationsCompnent";
+import { AnimatedText } from "../../utils/animation/animationsCompnent";
 import { FadeInDown, FadeInUp } from "react-native-reanimated";
-import { hp, wp } from "../utils/dimonsions";
-import pages from "@/assets/data/welcom_pages.json";
+import { hp, wp } from "../../utils/dimonsions";
+import { pages } from "../../utils/pages&svgUtils";
 
 const InitialePage = () => (
   <View style={{ alignItems: "center" }}>
     <LottieView
       autoPlay
-      source={require("../animationLotties/animation.json")}
+      source={require("@/anim/animation.json")}
       style={{ height: hp(50), width: wp(80) }}
     />
     <AnimatedText

@@ -17,15 +17,11 @@ export default function Page() {
   const isActive = isFocused && appState === "active";
   const [postition, setPosition] = useState<CameraPosition>("back");
 
-  const {
-    hasPermission: hasCamPermission,
-    requestPermission: requestCamPermission,
-  } = useCameraPermission();
+  const { hasPermission: hasCamPermission, requestPermission: requestCamPermission } =
+    useCameraPermission();
 
-  const {
-    hasPermission: hasMicPermission,
-    requestPermission: requestMicPermission,
-  } = useMicrophonePermission();
+  const { hasPermission: hasMicPermission, requestPermission: requestMicPermission } =
+    useMicrophonePermission();
 
   useEffect(() => {
     const askPermission = async () => {
@@ -43,9 +39,7 @@ export default function Page() {
   if (device == null)
     return (
       <View style={{ alignItems: "center", justifyContent: "center" }}>
-        <Text style={{ fontSize: 20 }}>
-          no camera device in this phone
-        </Text>
+        <Text style={{ fontSize: 20 }}>no camera device in this phone</Text>
       </View>
     );
 

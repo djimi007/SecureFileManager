@@ -1,17 +1,13 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
-import * as MediaLibrary from "expo-media-library";
+import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
-import { View, Button } from "react-native";
 import * as Updates from "expo-updates";
-import { StatusBar } from "expo-status-bar";
+
+import * as LocalAuthentication from "expo-local-authentication";
+import useStateApp from "../AppState/global_path";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -51,6 +47,8 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  const secure = useStateApp((state) => state.secure);
+
   useEffect(() => {
     async function onFetchUpdateAsync() {
       try {
@@ -67,13 +65,23 @@ function RootLayoutNav() {
     onFetchUpdateAsync();
   }, []);
 
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (secure) {
+        const result = await LocalAuthentication.authenticateAsync();
+        if (!result.success) {
+          checkAuth();
+        }
+      }
+    };
+    checkAuth();
+  }, []);
+
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider
-      value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-    >
-      <Stack>
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+      <Stack screenOptions={{ title: "ProGallery" }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="(page)" options={{ headerShown: false }} />
         <Stack.Screen name="(welcome)" options={{ headerShown: false }} />

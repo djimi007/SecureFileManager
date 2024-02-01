@@ -54,6 +54,11 @@
         {
           "username": "djimi_007"
         }
+      ],[
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow $(PRODUCT_NAME) to use Face ID."
+        }
       ],
       [
         "react-native-vision-camera",

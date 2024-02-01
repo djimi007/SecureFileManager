@@ -1,10 +1,9 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Link, Tabs } from "expo-router";
+import { Tabs } from "expo-router";
 import { Pressable, useColorScheme, Image } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 
 import Colors from "../../constants/Colors";
-import { deafaultStyle } from "../../constants/styles";
 
 /**
  * You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -25,30 +24,23 @@ export default function TabLayout() {
           tabBarIcon: () => (
             <Image
               source={require("../../assets/images/1.png")}
-              style={deafaultStyle.tabicons}
+              style={{ width: 24, height: 24 }}
             />
           ),
           headerRight: () => (
-            <Link href={"/testPage"} asChild>
-              <Pressable style={{ padding: 5, marginRight: "5%" }}>
-                <MaterialIcons
-                  name="account-circle"
-                  size={24}
-                  color="black"
-                />
-              </Pressable>
-            </Link>
+            <Pressable style={{ padding: 5, marginRight: "5%" }}>
+              <MaterialIcons name="account-circle" size={24} color="black" />
+            </Pressable>
           ),
         }}
       />
       <Tabs.Screen
         name="two"
         options={{
-          title: "Tab Two",
           tabBarIcon: () => (
             <Image
               source={require("../../assets/images/1.png")}
-              style={deafaultStyle.tabicons}
+              style={{ height: 24, width: 24 }}
             />
           ),
         }}

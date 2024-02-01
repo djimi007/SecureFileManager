@@ -5,18 +5,18 @@
     "content": "Welcome to the best app for security and file management"
   },
   {
-    "imagePath": "Folder Icon",
+    "imagePath": "Enable AllFilesAccess",
     "title": "Storage Access",
     "content":
       "please provide storage access to manage your files safely we will not use it it's just in this app local storage"
   },
   {
-    "imagePath": "Camera Icon",
+    "imagePath": "Enable Camera",
     "title": "Camera Access",
     "content": "we need camera access to take pictures and record videos"
   },
   {
-    "imagePath": "Mic Icon",
+    "imagePath": "Enable Mic",
     "title": "Mic Access",
     "content":
       "we need mic access to record your voice when you start video"
