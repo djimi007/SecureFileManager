@@ -47,6 +47,14 @@
     "plugins": [
       "expo-router",
       [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true
+          }
+        }
+      ],
+      [
         "expo-updates",
         {
           "username": "djimi_007"
