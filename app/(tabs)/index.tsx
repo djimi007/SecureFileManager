@@ -1,38 +1,52 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { StyleSheet, FlatList, View, Pressable, Text, Button } from "react-native";
 
-import Item from "@components/pages/item";
+import Item from "@components/pages/FolderItem";
 import useStateApp from "../../AppState/global_path";
-import { hp } from "../../utils/dimonsions";
-import Animated, { useAnimatedStyle, useSharedValue } from "react-native-reanimated";
+import { hp, wp } from "../../utils/dimonsions";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import * as rnfs from "react-native-fs";
+
+import * as Lonki from "expo-linking";
+import FolderItem from "@components/pages/FolderItem";
+import { useFileFetch } from "../../AppState/fetchFiles";
+import MyComponent from "@components/paperUtils/dialogtest";
+import FabGroup from "@components/paperUtils/fabtest";
+import { useLayoutState } from "../../AppState/fabvisible";
+import MyDialog from "@components/paperUtils/dialogtest";
+
 export default function App() {
   const path = useStateApp((state) => state.path);
-  const [files, setFiles] = useState(null);
+  const getFolders = useFileFetch((state) => state.getFolders);
+  const files = useFileFetch((state) => state.folders);
+  const length = useFileFetch((state) => state.foldersLength);
+
+  const [state, setState] = React.useState({ open: false });
+
+  const [visible, setVisible] = useState(false);
+
+  const setFabVisible = useLayoutState((state) => state.setFabVisible);
+
   useEffect(() => {
-    const getFiles = async () => {};
+    setFabVisible(true);
   }, []);
 
-  const [clicked, setClicked] = useState(false);
-  const sv = useSharedValue(0);
-
-  const animationStyle = useAnimatedStyle(() => ({
-    transform: [{ rotate: clicked ? `${sv.value + 45}deg` : `${sv.value}deg` }],
-  }));
+  useEffect(() => {
+    getFolders(path);
+  }, [length]);
 
   return (
     <View style={styles.container}>
-      <FlatList numColumns={3} data={files} renderItem={({ item }) => <Item item={item} />} />
-      <Animated.View style={[styles.fabButton, animationStyle]}>
-        <Pressable>
-          <Text style={{ fontSize: hp(3) }}>+</Text>
-        </Pressable>
-      </Animated.View>
-      <Button
-        title="click"
-        onPress={() => {
-          setClicked(!clicked);
-        }}
-      />
+      <View style={{ alignItems: "center", marginTop: hp(1) }}>
+        <FlatList
+          numColumns={3}
+          data={files}
+          renderItem={({ item }) => <FolderItem item={item} />}
+          columnWrapperStyle={{ gap: wp(2), flexWrap: "nowrap" }}
+        />
+      </View>
+      <FabGroup state={state} setState={setState} />
+      <MyDialog visible={visible} setVisible={setVisible} />
     </View>
   );
 }
@@ -56,7 +70,7 @@ const styles = StyleSheet.create({
     bottom: hp(3),
     zIndex: 10,
     right: hp(3),
-    borderRadius: hp(2),
+    borderRadius: hp(7),
     shadowOpacity: 1,
     shadowColor: "black",
     elevation: 5,

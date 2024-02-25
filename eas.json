@@ -1,6 +1,7 @@
 {
   "cli": {
-    "version": ">= 5.9.2"
+    "version": ">= 5.9.2",
+    "requireCommit": true
   },
   "build": {
     "dev": {
@@ -13,19 +14,17 @@
       },
       "channel": "dev"
     },
-    "main" : {
-    
+    "main": {
       "distribution": "internal",
-"channel": "main",
-"android":{ 
-  "buildType": "apk"
-}
-
-    }, 
+      "channel": "main",
+      "android": {
+        "buildType": "apk"
+      }
+    },
     "preview": {
-      "android":{ 
-  "buildType": "apk"
-},
+      "android": {
+        "buildType": "apk"
+      },
       "distribution": "internal",
       "channel": "preview"
     },

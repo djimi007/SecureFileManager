@@ -8,6 +8,7 @@ import * as Updates from "expo-updates";
 
 import * as LocalAuthentication from "expo-local-authentication";
 import useStateApp from "../AppState/global_path";
+import { PaperProvider } from "react-native-paper";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -77,15 +78,13 @@ function RootLayoutNav() {
     checkAuth();
   }, []);
 
-  const colorScheme = useColorScheme();
-
   return (
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
+    <PaperProvider>
       <Stack screenOptions={{ title: "ProGallery" }}>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="(page)" options={{ headerShown: false }} />
         <Stack.Screen name="(welcome)" options={{ headerShown: false }} />
       </Stack>
-    </ThemeProvider>
+    </PaperProvider>
   );
 }

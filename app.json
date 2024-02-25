@@ -5,16 +5,14 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "myapp",
+    "scheme": "progallery",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -24,7 +22,6 @@
         "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save photos."
       },
       "runtimeVersion": "1.0.0"
-
     },
     "android": {
       "adaptiveIcon": {
@@ -39,8 +36,8 @@
         "android.permission.MANAGE_EXTERNAL_STORAGE"
       ],
       "package": "com.mohamed.fine.ProGallery",
-      
-      "runtimeVersion":"1.0.0"
+
+      "runtimeVersion": "1.0.0"
     },
     "web": {
       "bundler": "metro",
@@ -54,7 +51,8 @@
         {
           "username": "djimi_007"
         }
-      ],[
+      ],
+      [
         "expo-local-authentication",
         {
           "faceIDPermission": "Allow $(PRODUCT_NAME) to use Face ID."

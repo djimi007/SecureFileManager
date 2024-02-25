@@ -1,18 +1,10 @@
-import React, { memo, useEffect, useState } from "react";
-import { View, Text, Pressable } from "react-native";
-import { BlackFolderTab } from "../../utils/pages&svgUtils";
+import { StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
 import * as RNFS from "react-native-fs";
+import { Image } from "expo-image";
 import { hp, wp } from "../../utils/dimonsions";
-import FastImage from "react-native-fast-image";
-
-import ReactNativeBlobUtil from "react-native-blob-util";
-import { TouchableOpacity } from "react-native-gesture-handler";
-import Share from "react-native-share";
-
-const fs = ReactNativeBlobUtil.fs;
-const Item = ({ item }: { item: RNFS.ReadDirItem }) => {
+const ImageItem = ({ item }: { item: RNFS.ReadDirItem }) => {
   const [uri, setUri] = useState("");
-
   const option = {
     url: uri !== null && `data:image/jpg;base64,${uri}`,
   };
@@ -31,12 +23,16 @@ const Item = ({ item }: { item: RNFS.ReadDirItem }) => {
 
     loadImage();
   }, [item.path]); // Re-run effect if item.path changes
-
   return (
-    <Pressable>
-      <BlackFolderTab />
-    </Pressable>
+    <View style={{}}>
+      <Image
+        source={{ uri: `data:image/jpg;base64,${uri}` }}
+        style={{ height: hp(30), width: wp(46) }}
+      />
+    </View>
   );
 };
 
-export default memo(Item);
+export default ImageItem;
+
+const styles = StyleSheet.create({});

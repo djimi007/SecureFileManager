@@ -10,8 +10,9 @@ import {
   useCameraPermission,
   useMicrophonePermission,
 } from "react-native-vision-camera";
+import { useLayoutState } from "../../AppState/fabvisible";
 
-export default function Page() {
+export default function CameraPage() {
   const isFocused = useIsFocused();
   const appState = useAppState();
   const isActive = isFocused && appState === "active";
