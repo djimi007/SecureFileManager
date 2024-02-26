@@ -1,31 +1,17 @@
 {
   "cli": {
-    "version": ">= 5.9.2"
+    "version": ">= 7.3.0"
   },
   "build": {
-    "dev": {
+    "development": {
+      "developmentClient": true,
       "distribution": "internal",
-      "android": {
-        "gradleCommand": ":app:assembleDebug"
-      },
-      "ios": {
-        "buildConfiguration": "Debug"
-      },
-      "channel": "dev"
-    },
-    "main": {
-      "distribution": "internal",
-      "channel": "main",
-      "android": {
-        "buildType": "apk"
-      }
+      "channel": "development"
     },
     "preview": {
-      "android": {
-        "buildType": "apk"
-      },
       "distribution": "internal",
-      "channel": "preview"
+      "channel": "preview",
+      "android": { "buildType": "apk" }
     },
     "production": {
       "channel": "production"
@@ -35,4 +21,3 @@
     "production": {}
   }
 }
-//eas update:channel:rollout --channel main
