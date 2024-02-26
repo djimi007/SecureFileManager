@@ -1,0 +1,9 @@
+{
+  "platforms": ["ios", "android", "web"],
+  "ios": {
+    "modules": ["PermissionModule"]
+  },
+  "android": {
+    "modules": ["expo.modules.permissionmodule.newone.PermissionModule"]
+  }
+}

@@ -15,6 +15,8 @@ import FabGroup from "@components/paperUtils/fabtest";
 import { useLayoutState } from "../../AppState/fabvisible";
 import MyDialog from "@components/paperUtils/dialogtest";
 import { router } from "expo-router";
+import { IconButton } from "react-native-paper";
+import { requestPermission } from "../../modules/permission-module";
 
 export default function App() {
   const path = useStateApp((state) => state.path);
@@ -48,6 +50,13 @@ export default function App() {
       </View>
       <FabGroup state={state} setState={setState} />
       <MyDialog visible={visible} setVisible={setVisible} />
+
+      <IconButton
+        icon={"home"}
+        onPress={() => {
+          requestPermission();
+        }}
+      />
     </View>
   );
 }

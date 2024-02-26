@@ -11,7 +11,7 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 
 import PageComponent from "@components/welcome_pages/pagesComponent";
 import { wp } from "../utils/dimonsions";
-import { requestPermission } from "../modules/my-module";
+import { requestPermission } from "../modules/permission-module";
 import { useCameraPermission, useMicrophonePermission } from "react-native-vision-camera";
 import { runOnJS } from "react-native-reanimated";
 import { styles } from "../constants/styles";
