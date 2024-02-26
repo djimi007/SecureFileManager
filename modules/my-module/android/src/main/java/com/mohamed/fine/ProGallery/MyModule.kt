@@ -45,6 +45,7 @@ class MyModule : Module() {
             val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
             val uri = Uri.fromParts("package", context.packageName, null)
             intent.data = uri
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK 
             context.startActivity(intent)
         }else {
           Toast.makeText(context,"already have permission", Toast.LENGTH_SHORT).show()

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Gesture,
   Directions,
@@ -10,14 +10,22 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text, Pressable, StyleSheet } from "react-native";
 
 import PageComponent from "@components/welcome_pages/pagesComponent";
-import { wp } from "../../utils/dimonsions";
-import { requestPermission } from "../../modules/my-module";
+import { wp } from "../utils/dimonsions";
+import { requestPermission } from "../modules/my-module";
 import { useCameraPermission, useMicrophonePermission } from "react-native-vision-camera";
 import { runOnJS } from "react-native-reanimated";
-import { styles } from "../../constants/styles";
-import { pages } from "../../utils/pages&svgUtils";
+import { styles } from "../constants/styles";
+import { pages } from "../utils/pages&svgUtils";
+import { router } from "expo-router";
+import { useLayoutState } from "../AppState/fabvisible";
 const index = () => {
   const [selectedItem, setSelectedItem] = useState(1);
+
+  const setFabVisible = useLayoutState((state) => state.setFabVisible);
+
+  useEffect(() => {
+    setFabVisible(false);
+  }, []);
 
   const { hasPermission: hasCamPermission, requestPermission: requestCamPermission } =
     useCameraPermission();
@@ -68,6 +76,7 @@ const index = () => {
         break;
       case 3:
         askMicPermission();
+        router.replace("/(tabs)");
         break;
     }
   };

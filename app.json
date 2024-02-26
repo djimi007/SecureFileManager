@@ -4,8 +4,8 @@
     "slug": "tttttttt",
     "version": "1.0.0",
     "orientation": "portrait",
+    "scheme": "justtouseone",
     "icon": "./assets/images/icon.png",
-    "scheme": "progallery",
     "userInterfaceStyle": "automatic",
     "splash": {
       "image": "./assets/images/splash.png",
@@ -87,11 +87,8 @@
         "origin": false
       },
       "eas": {
-        "projectId": "e0800521-3a8b-4841-8b77-b1c448824830"
+        "projectId": "95d32aa5-c6b7-4ea8-96ed-913cd8864e0a"
       }
-    },
-    "updates": {
-      "url": "https://u.expo.dev/e0800521-3a8b-4841-8b77-b1c448824830"
     }
   }
 }

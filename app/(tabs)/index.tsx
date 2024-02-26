@@ -14,6 +14,7 @@ import MyComponent from "@components/paperUtils/dialogtest";
 import FabGroup from "@components/paperUtils/fabtest";
 import { useLayoutState } from "../../AppState/fabvisible";
 import MyDialog from "@components/paperUtils/dialogtest";
+import { router } from "expo-router";
 
 export default function App() {
   const path = useStateApp((state) => state.path);
