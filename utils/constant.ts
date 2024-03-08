@@ -1,3 +1,8 @@
-import * as RNFS from "react-native-fs";
+import ReactNativeBlobUtil from "react-native-blob-util";
+import * as LocalAuthentication from "expo-local-authentication";
+import { MMKV } from "react-native-mmkv";
 
-export { RNFS };
+const fs = ReactNativeBlobUtil.fs;
+const initialPath = fs.dirs.LegacyPictureDir + "/Progallery";
+
+export { initialPath, fs, LocalAuthentication };

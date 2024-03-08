@@ -3,6 +3,7 @@ import { FAB, Portal, PaperProvider } from "react-native-paper";
 import { hp } from "../../utils/dimonsions";
 import { useLayoutState } from "../../AppState/fabvisible";
 import { StyleSheet } from "react-native";
+import { useFileFetch } from "../../AppState/fetchFiles";
 
 interface Props {
   state: {
@@ -17,6 +18,8 @@ interface Props {
 
 const FabGroup = ({ state, setState }: Props) => {
   const visibleFab = useLayoutState((state) => state.visibleFab);
+
+  const createFolder = useFileFetch((state) => state.createFolder);
 
   const onStateChange = ({ open }: { open: boolean }) => setState({ open });
 
@@ -35,7 +38,7 @@ const FabGroup = ({ state, setState }: Props) => {
           {
             icon: "folder",
             label: "nv dossier",
-            onPress: () => console.log("Pressed new Folder"),
+            onPress: () => {},
             color: "black",
             style: { backgroundColor: "white" },
           },

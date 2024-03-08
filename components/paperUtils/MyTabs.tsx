@@ -1,5 +1,5 @@
 import App from "../../app/(tabs)";
-import CameraPage from "../../app/(tabs)/two";
+import CameraPage from "../../app/(tabs)/camera";
 import {
   BlackCameraTab,
   BlackFolderTab,
@@ -7,20 +7,25 @@ import {
   WhiteFolderTab,
 } from "../../utils/pages&svgUtils";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Appbar, Divider } from "react-native-paper";
+import { Appbar } from "react-native-paper";
 import { createMaterialBottomTabNavigator } from "react-native-paper/react-navigation";
 import { wp } from "../../utils/dimonsions";
 import { useLayoutState } from "../../AppState/fabvisible";
 import ImagePage from "../../app/(tabs)/images";
 import { StatusBar } from "expo-status-bar";
 import { Image } from "expo-image";
+import { Colors } from "../../constants/Colors";
+import { useFoucsed } from "../../AppState/backState";
 
+import { Easing } from "react-native-reanimated";
+import ImageDetails from "../../app/[path]";
 const Tab = createMaterialBottomTabNavigator();
 export default function MyTabs() {
   const setFabVisible = useLayoutState((state) => state.setFabVisible);
 
+  const { setIsFoucsed } = useFoucsed();
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
       <StatusBar style="inverted" backgroundColor="black" />
       <Appbar style={{ backgroundColor: "black" }}>
         <Appbar.Content
@@ -32,8 +37,11 @@ export default function MyTabs() {
       </Appbar>
 
       <Tab.Navigator
-        sceneAnimationEnabled
-        barStyle={{ alignItems: "center", justifyContent: "center", backgroundColor: "#d3d3d3" }}
+        barStyle={{
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: Colors.background,
+        }}
         activeIndicatorStyle={{
           height: wp(13),
           width: wp(13),
@@ -42,7 +50,6 @@ export default function MyTabs() {
         compact
         sceneAnimationType="shifting"
         labeled={false}
-        shifting
         initialRouteName="File"
       >
         <Tab.Screen
@@ -50,6 +57,7 @@ export default function MyTabs() {
           component={App}
           listeners={{
             tabPress: () => {
+              setIsFoucsed(true);
               setFabVisible(true);
             },
           }}
@@ -66,6 +74,7 @@ export default function MyTabs() {
           name="Picture"
           listeners={{
             tabPress: () => {
+              setIsFoucsed(false);
               setFabVisible(false);
             },
           }}
@@ -89,6 +98,7 @@ export default function MyTabs() {
           name="Camera"
           listeners={{
             tabPress: () => {
+              setIsFoucsed(false);
               setFabVisible(false);
             },
           }}

@@ -1,80 +1,95 @@
 import { create } from "zustand";
 
-import * as RNFS from "react-native-fs";
 import Share from "react-native-share";
+import { Image } from "expo-image";
+
+import { ReactNativeBlobUtilStat } from "react-native-blob-util";
+import { fs } from "../utils/constant";
+
 type FileFetchProp = {
-  folders: RNFS.ReadDirItem[];
-  images: RNFS.ReadDirItem[];
+  folders: ReactNativeBlobUtilStat[];
+  images: ReactNativeBlobUtilStat[];
+  dirLength: number;
+
   foldersLength: number;
   imagesLength: number;
-  selectedFiles: RNFS.ReadDirItem[];
-  addToSelectedFile: (selectedFile: RNFS.ReadDirItem) => void;
-  getFolders: (path: string) => Promise<void>;
-  getImages: (path: string) => Promise<void>;
+  selectedFolders: ReactNativeBlobUtilStat[];
+  selectedImages: ReactNativeBlobUtilStat[];
+  addToSelectedImages: (selectedFile: ReactNativeBlobUtilStat) => void;
+  addToSelectedFolders: (selectedFile: ReactNativeBlobUtilStat) => void;
+  getDir: (path: string) => Promise<void>;
+  getItemIndex: (item: ReactNativeBlobUtilStat) => number;
   createFolder: (folderName: string, path: string) => Promise<void>;
-  deleteFiles: (selectedFiles: RNFS.ReadDirItem[]) => Promise<void>;
-  editFile: (selectedFile: RNFS.ReadDirItem, name: string) => Promise<void>;
-  shareFiles: (selectedFiles: RNFS.ReadDirItem[]) => void;
+  deleteFiles: (selectedFiles: ReactNativeBlobUtilStat[]) => Promise<void>;
+  editFile: (selectedFile: ReactNativeBlobUtilStat, name: string) => Promise<void>;
+  shareFiles: (selectedFiles: ReactNativeBlobUtilStat[]) => void;
 };
 
 export const useFileFetch = create<FileFetchProp>((set, get) => ({
   folders: [],
   images: [],
+  dirLength: 0,
   foldersLength: 0,
   imagesLength: 0,
-  selectedFiles: [],
-  addToSelectedFile: (selectedFile: RNFS.ReadDirItem) =>
-    set((state) => ({ selectedFiles: [...state.selectedFiles, selectedFile] })),
-  getFolders: async (path: string) => {
+  selectedFolders: [],
+  selectedImages: [],
+  getItemIndex: (item: ReactNativeBlobUtilStat) =>
+    get().images.findIndex((image) => image.path === item.path),
+
+  addToSelectedFolders: (selectedFile: ReactNativeBlobUtilStat) =>
+    set((state) => ({ selectedFolders: [...state.selectedFolders, selectedFile] })),
+  addToSelectedImages: (selectedFile: ReactNativeBlobUtilStat) =>
+    set((state) => ({ selectedImages: [...state.selectedImages, selectedFile] })),
+
+  getDir: async (path: string) => {
     try {
-      let result = await RNFS.readDir(path);
-      set({ foldersLength: result.length });
-      result = result.filter((e) => e.isDirectory());
-      set({ folders: result });
-      console.log(result);
+      const result = await fs.lstat(path);
+      const images = result.filter((e) => e.type === "file");
+      const folders = result.filter((e) => e.type === "directory");
+      set({
+        images: images,
+        folders: folders,
+        imagesLength: images.length,
+        foldersLength: folders.length,
+        dirLength: result.length,
+      });
+
+      if (images) {
+        let urls = images.map((e) => e.path);
+        await Image.prefetch(urls);
+      }
     } catch (error) {
-      console.log(error);
-    }
-  },
-  getImages: async (path: string) => {
-    try {
-      let result = await RNFS.readDir(path);
-      set({ imagesLength: result.length });
-      result = result.filter((e) => e.isFile());
-      set({ images: result });
-      console.log(result);
-    } catch (error) {
-      console.log(error);
+      console.log("error : djimi : ", error);
     }
   },
 
   createFolder: async (folderName: string, path: string) => {
     try {
-      await RNFS.mkdir(`${path}/${folderName}`);
+      await fs.mkdir(`${path}/${folderName}`);
     } catch (error) {
       console.log(error);
     }
   },
-  deleteFiles: async (selectedFiles: RNFS.ReadDirItem[]) => {
+  deleteFiles: async (selectedFiles: ReactNativeBlobUtilStat[]) => {
     selectedFiles.forEach((element) => {
-      RNFS.unlink(element.path).catch((e) => {
+      fs.unlink(element.path).catch((e) => {
         console.log(e);
       });
     });
   },
-  editFile: async (selectedFile: RNFS.ReadDirItem, name: string) => {
+  editFile: async (selectedFile: ReactNativeBlobUtilStat, name: string) => {
     try {
-      await RNFS.copyFile(
+      await fs.cp(
         selectedFile.path,
         `${selectedFile.path.substring(0, selectedFile.path.lastIndexOf("/"))}/${name}`
       );
-      await RNFS.unlink(selectedFile.path);
+      await fs.unlink(selectedFile.path);
     } catch (e) {
       console.log(e);
     }
   },
 
-  shareFiles: (selectedFiles: RNFS.ReadDirItem[]) => {
+  shareFiles: (selectedFiles: ReactNativeBlobUtilStat[]) => {
     let urls: string[] = [];
     selectedFiles.map((e) => {
       urls.push(e.path);

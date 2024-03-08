@@ -16,13 +16,21 @@ import { useCameraPermission, useMicrophonePermission } from "react-native-visio
 import { runOnJS } from "react-native-reanimated";
 import { styles } from "../constants/styles";
 import { pages } from "../utils/pages&svgUtils";
-import { router } from "expo-router";
+import { Redirect, router } from "expo-router";
 import { useLayoutState } from "../AppState/fabvisible";
+import { useFirstLaunch } from "../AppState/firstlaunch";
 const index = () => {
-  const [selectedItem, setSelectedItem] = useState(1);
+  const [selectedItem, setSelectedItem] = useState(0);
+
+  const firstLaunch = useFirstLaunch((state) => state.firstLaunch);
+  const setFirstLaunch = useFirstLaunch((state) => state.setFirstLaunch);
 
   const setFabVisible = useLayoutState((state) => state.setFabVisible);
 
+  if (firstLaunch) return <Redirect href="/(tabs)" />;
+  useEffect(() => {
+    setFirstLaunch(true);
+  }, []);
   useEffect(() => {
     setFabVisible(false);
   }, []);

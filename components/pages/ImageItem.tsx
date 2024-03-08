@@ -1,38 +1,67 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import React, { memo, useEffect, useState } from "react";
 import * as RNFS from "react-native-fs";
 import { Image } from "expo-image";
-import { hp, wp } from "../../utils/dimonsions";
-const ImageItem = ({ item }: { item: RNFS.ReadDirItem }) => {
-  const [uri, setUri] = useState("");
+import { hp, isEven, wp } from "../../utils/dimonsions";
+import { ReactNativeBlobUtilStat } from "react-native-blob-util";
+import { useFileFetch } from "../../AppState/fetchFiles";
+import { AntDesign } from "@expo/vector-icons";
+import { Link } from "expo-router";
+import { useFoucsed } from "../../AppState/backState";
+
+const ImageItem = ({ item }: { item: ReactNativeBlobUtilStat }) => {
+  const blurhash = "LEHV6nWB2yk8pyo0adR*.7kCMdnj";
+  const imageIndex = useFileFetch((state) => state.getItemIndex(item));
+  const [clicked, setClicked] = useState(false);
+  const addToSelectedFiles = useFileFetch((state) => state.addToSelectedImages);
   const option = {
-    url: uri !== null && `data:image/jpg;base64,${uri}`,
+    url: `file://${item.path}`,
   };
 
-  useEffect(() => {
-    const loadImage = async () => {
-      try {
-        const filePath = item.path; // Access path directly for potential speed gains
-        const uri = await RNFS.readFile(filePath, "base64"); // Use RNFS for optimized reading
-        setUri(uri);
-      } catch (error) {
-        console.error("Error loading image:", error);
-        // Handle errors gracefully, e.g., display a placeholder image or error message
-      }
-    };
-
-    loadImage();
-  }, [item.path]); // Re-run effect if item.path changes
   return (
-    <View style={{}}>
-      <Image
-        source={{ uri: `data:image/jpg;base64,${uri}` }}
-        style={{ height: hp(30), width: wp(46) }}
-      />
-    </View>
+    <Link
+      href={{
+        pathname: "/[path]",
+        params: { path: `file://${item.path}`, filename: item.filename },
+      }}
+      asChild
+    >
+      <Pressable>
+        <Image
+          placeholder={blurhash}
+          source={{ uri: `file://${item.path}` }}
+          style={[styles.image, { height: isEven(imageIndex) ? hp(30) : hp(28) }]}
+        />
+        <AntDesign
+          style={{
+            position: "absolute",
+            bottom: isEven(imageIndex) ? wp(2) : wp(6.2),
+            right: wp(1),
+          }}
+          name={clicked ? "checkcircle" : "checkcircleo"}
+          size={wp(6)}
+          color="black"
+          onPress={() => {
+            if (!clicked) {
+              addToSelectedFiles(item!);
+              setClicked(!clicked);
+            } else {
+              setClicked(!clicked);
+            }
+          }}
+        />
+      </Pressable>
+    </Link>
   );
 };
 
-export default ImageItem;
+const styles = StyleSheet.create({
+  image: {
+    height: hp(30),
+    width: wp(46),
+    borderRadius: wp(4),
+    marginBottom: hp(1),
+  },
+});
 
-const styles = StyleSheet.create({});
+export default memo(ImageItem);

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "testtiii",
-    "slug": "tttttttt",
+    "name": "ProGallery",
+    "slug": "ProGallery",
     "version": "1.0.0",
     "orientation": "portrait",
     "scheme": "justtouseone",
@@ -87,8 +87,11 @@
         "origin": false
       },
       "eas": {
-        "projectId": "95d32aa5-c6b7-4ea8-96ed-913cd8864e0a"
+        "projectId": "fb0ab1bc-671e-4567-afa5-87a46db0202e"
       }
+    },
+    "updates": {
+      "url": "https://u.expo.dev/fb0ab1bc-671e-4567-afa5-87a46db0202e"
     }
   }
 }

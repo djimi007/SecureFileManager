@@ -12,7 +12,7 @@ const MyDialog = ({ visible, setVisible }: Props) => {
   return (
     <Portal>
       <Dialog visible={visible} onDismiss={hideDialog}>
-        <Dialog.Icon icon="alert" />
+        <Dialog.Icon icon="folder" />
         <Dialog.Title style={styles.title}>This is a title</Dialog.Title>
         <Dialog.Content>
           <TextInput />

@@ -1,13 +1,9 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { DarkTheme, DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
-import { useColorScheme } from "react-native";
 import * as Updates from "expo-updates";
 
-import * as LocalAuthentication from "expo-local-authentication";
-import useStateApp from "../AppState/global_path";
 import { PaperProvider } from "react-native-paper";
 
 export {
@@ -17,7 +13,7 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "/welcome",
+  initialRouteName: "/index",
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -48,8 +44,6 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  const secure = useStateApp((state) => state.secure);
-
   useEffect(() => {
     async function onFetchUpdateAsync() {
       try {
@@ -66,22 +60,10 @@ function RootLayoutNav() {
     onFetchUpdateAsync();
   }, []);
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      if (secure) {
-        const result = await LocalAuthentication.authenticateAsync();
-        if (!result.success) {
-          checkAuth();
-        }
-      }
-    };
-    checkAuth();
-  }, []);
-
   return (
     <PaperProvider>
       <Stack screenOptions={{ title: "ProGallery" }}>
-        <Stack.Screen name="welcome" options={{ headerShown: false }} />
+        <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
     </PaperProvider>
