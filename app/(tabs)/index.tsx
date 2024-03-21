@@ -35,16 +35,19 @@ export default function App() {
 
   const setPathOnBackPress = usePath((state) => state.setPathOnBackPress);
 
-  const [state, setState] = React.useState({ open: false });
-
-  const [visible, setVisible] = useState(false);
-
   const { secure } = useSecureApp();
 
   const { path, setPath } = usePath();
   const { isFoucsed, setIsFoucsed } = useFoucsed();
 
   const appState = useAppState();
+
+  const { visibleFab, setFabVisible } = useLayoutState();
+
+  useEffect(() => {
+    setFabVisible(true);
+  }, []);
+
   useFocusEffect(
     React.useCallback(() => {
       if (!secure && appState !== "active") setPath(initialPath);
@@ -79,14 +82,15 @@ export default function App() {
       <SercurDivider />
       <View style={{ marginTop: hp(1), paddingHorizontal: hp(1) }}>
         <FlatList
+          showsVerticalScrollIndicator={false}
           numColumns={3}
           data={folders}
           renderItem={({ item }) => <FolderItem item={item} />}
           columnWrapperStyle={{ gap: wp(2), flexWrap: "nowrap" }}
         />
       </View>
-      <FabGroup state={state} setState={setState} />
-      <MyDialog visible={visible} setVisible={setVisible} />
+      {visibleFab && <FabGroup />}
+      <MyDialog />
     </View>
   );
 }

@@ -1,7 +1,7 @@
 import { useIsFocused } from "@react-navigation/native";
 import { Link } from "expo-router";
 import { useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View, SafeAreaView, Platform } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, Platform, Pressable } from "react-native";
 import { useAppState } from "@react-native-community/hooks";
 
 import {
@@ -21,14 +21,17 @@ import { Image } from "expo-image";
 
 export default function CameraPage() {
   const camera = useRef<Camera>(null);
-  const [flash, setFlash] = useState<TakePhotoOptions["flash"]>("off");
 
-  const [captureSelected, setCaptureSelected] = useState(true);
+  const [flash, setFlash] = useState<TakePhotoOptions["flash"]>("off");
+  const [photoSelected, setPhotoSelected] = useState(true);
+  const [postition, setPosition] = useState<CameraPosition>("back");
+
+  const photoSelectedExp = photoSelected ? "black" : "white";
+  const videoSelectedExp = !photoSelected ? "black" : "white";
 
   const isFocused = useIsFocused();
   const appState = useAppState();
   const isActive = isFocused && appState === "active";
-  const [postition, setPosition] = useState<CameraPosition>("back");
 
   const { hasPermission: hasCamPermission, requestPermission: requestCamPermission } =
     useCameraPermission();
@@ -55,12 +58,24 @@ export default function CameraPage() {
     });
   };
 
+  const onPressFlash = () => {
+    if (flash === "off") setFlash("on");
+    else setFlash("off");
+  };
+
   if (device == null)
     return (
       <View style={{ alignItems: "center", justifyContent: "center" }}>
         <Text style={{ fontSize: 20 }}>no camera device in this phone</Text>
       </View>
     );
+
+  const onPressPicture = () => {
+    setPhotoSelected(true);
+  };
+  const onPressVideo = () => {
+    setPhotoSelected(false);
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -79,10 +94,7 @@ export default function CameraPage() {
         size={wp(7)}
         color="white"
         style={{ position: "absolute", right: wp(3), top: hp(3) }}
-        onPress={() => {
-          if (flash === "off") setFlash("on");
-          else setFlash("off");
-        }}
+        onPress={onPressFlash}
       />
       <MaterialIcons
         name="flip-camera-android"
@@ -90,37 +102,39 @@ export default function CameraPage() {
         color="white"
         style={{ position: "absolute", right: wp(3), top: hp(9) }}
       />
-      <View
-        style={{
-          marginTop: "auto",
-          flexDirection: "row",
-          backgroundColor: "white",
-          justifyContent: "center",
-          padding: wp(3),
-          gap: wp(25),
-        }}
-      >
-        <View style={styles.elementContainer}>
-          <Text style={{ color: "white" }}>Vidéo</Text>
-        </View>
-        <View style={styles.elementContainer}>
-          <Text style={{ color: "white" }}>Photo</Text>
-        </View>
+      <View style={styles.tabTow}>
+        <CustomPressable
+          videoSelectedExp={videoSelectedExp}
+          photoSelectedExp={photoSelectedExp}
+          text={"Video"}
+          onPress={onPressVideo}
+        />
+        <CustomPressable
+          videoSelectedExp={photoSelectedExp}
+          photoSelectedExp={videoSelectedExp}
+          text={"Picture"}
+          onPress={onPressPicture}
+        />
       </View>
 
-      <Image
-        source={require("@/assets/icons/record.png")}
-        style={{
-          width: wp(18),
-          height: wp(18),
-          bottom: hp(3.5),
-          position: "absolute",
-          alignSelf: "center",
-        }}
-      />
+      <Image source={require("@/assets/icons/record.png")} style={styles.icon} />
     </SafeAreaView>
   );
 }
+
+const CustomPressable = ({ videoSelectedExp, photoSelectedExp, text, onPress }: any) => (
+  <Pressable
+    style={[
+      styles.elementContainer,
+      {
+        backgroundColor: videoSelectedExp,
+      },
+    ]}
+    onPress={onPress}
+  >
+    <Text style={{ color: photoSelectedExp }}>{text}</Text>
+  </Pressable>
+);
 
 const styles = StyleSheet.create({
   elementContainer: {
@@ -130,5 +144,20 @@ const styles = StyleSheet.create({
     padding: wp(3),
     borderRadius: wp(4),
     width: wp(25),
+  },
+  tabTow: {
+    marginTop: "auto",
+    flexDirection: "row",
+    backgroundColor: "white",
+    justifyContent: "center",
+    padding: wp(3),
+    gap: wp(25),
+  },
+  icon: {
+    width: wp(18),
+    height: wp(18),
+    bottom: hp(3.5),
+    position: "absolute",
+    alignSelf: "center",
   },
 });

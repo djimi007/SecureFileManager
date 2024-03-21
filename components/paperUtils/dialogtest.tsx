@@ -1,12 +1,11 @@
 import * as React from "react";
+import { useState } from "react";
 import { StyleSheet } from "react-native";
 import { Dialog, Portal, Text, TextInput } from "react-native-paper";
-interface Props {
-  visible: boolean;
-  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
-const MyDialog = ({ visible, setVisible }: Props) => {
+const MyDialog = () => {
+  const [visible, setVisible] = useState(false);
+
   const hideDialog = () => setVisible(false);
 
   return (

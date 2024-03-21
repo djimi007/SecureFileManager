@@ -49,7 +49,7 @@ const index = () => {
   const askMicPermission = async () => {
     if (!hasMicPermission) return await requestMicPermission();
   };
-  const compose = Gesture.Simultaneous(
+  const compose = Gesture.Race(
     Gesture.Fling()
       .direction(Directions.RIGHT)
 

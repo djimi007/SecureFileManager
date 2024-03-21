@@ -3,20 +3,17 @@ import React, { useEffect } from "react";
 import { Stack, useLocalSearchParams } from "expo-router";
 import { Image } from "expo-image";
 import { useFoucsed } from "../AppState/backState";
-import { Appbar, Icon } from "react-native-paper";
+import { Appbar, Icon, Portal, Surface } from "react-native-paper";
 import { hp, wp } from "../utils/dimonsions";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BlackFolderTab, WhiteFolderTab } from "../utils/pages&svgUtils";
 import { Entypo } from "@expo/vector-icons";
 import { Colors } from "../constants/Colors";
+import ViewPager from "@components/pages/ViewPager";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const ImageDetails = () => {
-  const { setIsFoucsed } = useFoucsed();
   const { path, filename } = useLocalSearchParams();
-
-  useEffect(() => {
-    setIsFoucsed(false);
-  }, []);
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
@@ -32,20 +29,15 @@ const ImageDetails = () => {
         <View style={{ flex: 1, alignItems: "center", backgroundColor: Colors.white }}>
           <View style={styles.rowView}>
             <View style={styles.folderIcon}>
-              <WhiteFolderTab height={wp(6)} width={wp(6)} />
+              <WhiteFolderTab height={wp(8)} width={wp(8)} />
             </View>
-            <View style={{ backgroundColor: "red", flex: 1 }}>
+            <View style={{ flex: 1 }}>
               <Text style={{ fontSize: wp(4), fontWeight: "bold" }}>New Dossier</Text>
-              <Text style={{}}>{filename}</Text>
+              <Text>{filename}</Text>
             </View>
-            <Entypo name="dots-three-vertical" size={24} color="black" />
+            <Entypo name="dots-three-vertical" size={wp(8)} color="black" />
           </View>
-          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <Image
-              source={{ uri: path.toLocaleString() }}
-              style={{ width: wp(80), height: hp(60) }}
-            />
-          </View>
+          <ViewPager path={path} />
         </View>
       </SafeAreaView>
     </>
@@ -63,7 +55,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   folderIcon: {
-    padding: wp(4),
+    padding: wp(3),
     borderRadius: wp(5),
     backgroundColor: "black",
     marginRight: wp(3),

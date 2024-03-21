@@ -1,10 +1,12 @@
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
 import * as Updates from "expo-updates";
 
 import { PaperProvider } from "react-native-paper";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useFoucsed } from "../AppState/backState";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -61,11 +63,13 @@ function RootLayoutNav() {
   }, []);
 
   return (
-    <PaperProvider>
-      <Stack screenOptions={{ title: "ProGallery" }}>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
-    </PaperProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <PaperProvider>
+        <Stack screenOptions={{ title: "ProGallery" }}>
+          <Stack.Screen name="index" options={{ headerShown: false }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </PaperProvider>
+    </GestureHandlerRootView>
   );
 }

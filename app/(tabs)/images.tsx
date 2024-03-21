@@ -27,6 +27,7 @@ export default function ImagePage() {
       <SercurDivider />
       <View style={{ alignItems: "center", marginTop: hp(1), flex: 1 }}>
         <FlatList
+          showsVerticalScrollIndicator={false}
           numColumns={2}
           data={images}
           renderItem={({ item }) => <ImageItem item={item} />}

@@ -5,7 +5,7 @@
     "kind": "Directory"
   },
   "applicationId": "expo.modules.permissionmodule.newone",
-  "variantName": "release",
+  "variantName": "debug",
   "elements": [
     {
       "type": "SINGLE",

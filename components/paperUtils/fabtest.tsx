@@ -5,18 +5,9 @@ import { useLayoutState } from "../../AppState/fabvisible";
 import { StyleSheet } from "react-native";
 import { useFileFetch } from "../../AppState/fetchFiles";
 
-interface Props {
-  state: {
-    open: boolean;
-  };
-  setState: React.Dispatch<
-    React.SetStateAction<{
-      open: boolean;
-    }>
-  >;
-}
+const FabGroup = () => {
+  const [state, setState] = React.useState({ open: false });
 
-const FabGroup = ({ state, setState }: Props) => {
   const visibleFab = useLayoutState((state) => state.visibleFab);
 
   const createFolder = useFileFetch((state) => state.createFolder);
@@ -29,8 +20,9 @@ const FabGroup = ({ state, setState }: Props) => {
     <Portal>
       <FAB.Group
         fabStyle={{ backgroundColor: "white" }}
+        backdropColor="transparent"
         style={{ marginBottom: hp(9) }}
-        open={open}
+        open={open && visibleFab}
         visible={visibleFab}
         icon={open ? "close" : "plus"}
         rippleColor={"black"}

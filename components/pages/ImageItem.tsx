@@ -22,7 +22,7 @@ const ImageItem = ({ item }: { item: ReactNativeBlobUtilStat }) => {
     <Link
       href={{
         pathname: "/[path]",
-        params: { path: `file://${item.path}`, filename: item.filename },
+        params: { path: `${item.path}`, filename: item.filename },
       }}
       asChild
     >
