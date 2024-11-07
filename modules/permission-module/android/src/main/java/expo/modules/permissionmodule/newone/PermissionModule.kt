@@ -41,20 +41,21 @@ class PermissionModule : Module() {
     Function("hello") {
       "Hello world! 👋"
     }
-
     Function("requestPermission") {
-
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
         if (!Environment.isExternalStorageManager()) {
-            val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
-            val uri = Uri.fromParts("package", context.packageName, null)
-            intent.data = uri
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK 
-            context.startActivity(intent)
-        }else {
-          Toast.makeText(context,"already have permission", Toast.LENGTH_SHORT).show()
+          val intent = Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION)
+          val uri = Uri.fromParts("package", context.packageName, null)
+          intent.data = uri
+          intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+          context.startActivity(intent)
+          return@Function false
+        } else {
+          Toast.makeText(context, "Already have permission", Toast.LENGTH_SHORT).show()
+          return@Function true
         }
-    }
+      }
+      return@Function true
     }
 
 

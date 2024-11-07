@@ -39,7 +39,7 @@ const ImageItem = ({ item }: { item: ReactNativeBlobUtilStat }) => {
             right: wp(1),
           }}
           name={clicked ? "checkcircle" : "checkcircleo"}
-          size={wp(6)}
+          size={wp(7)}
           color="black"
           onPress={() => {
             if (!clicked) {

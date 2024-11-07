@@ -1,4 +1,4 @@
-import { NativeModulesProxy, EventEmitter, Subscription } from "expo-modules-core";
+import { EventEmitter, Subscription } from "expo-modules-core";
 
 // Import the native module. On web, it will be resolved to PermissionModule.web.ts
 // and on native platforms to PermissionModule.ts
@@ -13,18 +13,12 @@ export function hello(): string {
   return PermissionModule.hello();
 }
 
-export function requestPermission() {
-  return PermissionModule.requestPermission();
+export async function requestPermission(): Promise<boolean> {
+  return await PermissionModule.requestPermission();
 }
 
 export async function setValueAsync(value: string) {
   return await PermissionModule.setValueAsync(value);
-}
-
-const emitter = new EventEmitter(PermissionModule ?? NativeModulesProxy.PermissionModule);
-
-export function addChangeListener(listener: (event: ChangeEventPayload) => void): Subscription {
-  return emitter.addListener<ChangeEventPayload>("onChange", listener);
 }
 
 export { PermissionModuleView, PermissionModuleViewProps, ChangeEventPayload };

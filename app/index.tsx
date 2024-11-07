@@ -19,27 +19,28 @@ import { pages } from "../utils/pages&svgUtils";
 import { Redirect, router } from "expo-router";
 import { useLayoutState } from "../AppState/fabvisible";
 import { useFirstLaunch } from "../AppState/firstlaunch";
+import { usePermissions } from "../hooks/usePermission";
 const index = () => {
   const [selectedItem, setSelectedItem] = useState(0);
 
-  const firstLaunch = useFirstLaunch((state) => state.firstLaunch);
   const setFirstLaunch = useFirstLaunch((state) => state.setFirstLaunch);
 
   const setFabVisible = useLayoutState((state) => state.setFabVisible);
 
-  if (firstLaunch) return <Redirect href="/(tabs)" />;
-  useEffect(() => {
-    setFirstLaunch(true);
-  }, []);
-  useEffect(() => {
-    setFabVisible(false);
-  }, []);
+  const permissionAgreed = usePermissions();
 
   const { hasPermission: hasCamPermission, requestPermission: requestCamPermission } =
     useCameraPermission();
 
   const { hasPermission: hasMicPermission, requestPermission: requestMicPermission } =
     useMicrophonePermission();
+
+  useEffect(() => {
+    setFirstLaunch(false);
+    setFabVisible(false);
+  }, []);
+
+  if (permissionAgreed) return <Redirect href="/(tabs)" />;
 
   const askCameraPermission = async () => {
     if (!hasCamPermission) {
@@ -69,13 +70,13 @@ const index = () => {
       )
   );
 
-  const movmentPage = () => {
+  const movmentPage = async () => {
     switch (selectedItem) {
       case 0:
         setSelectedItem(1);
         break;
       case 1:
-        requestPermission();
+        await requestPermission();
         setSelectedItem(selectedItem + 1);
         break;
       case 2:

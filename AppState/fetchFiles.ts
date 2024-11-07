@@ -4,13 +4,13 @@ import Share from "react-native-share";
 import { Image } from "expo-image";
 
 import { ReactNativeBlobUtilStat } from "react-native-blob-util";
-import { fs } from "../utils/constant";
+import { fs, initialPath } from "../utils/constant";
 
 type FileFetchProp = {
   folders: ReactNativeBlobUtilStat[];
   images: ReactNativeBlobUtilStat[];
   dirLength: number;
-
+  notify: boolean;
   foldersLength: number;
   imagesLength: number;
   selectedFolders: ReactNativeBlobUtilStat[];
@@ -32,6 +32,7 @@ export const useFileFetch = create<FileFetchProp>((set, get) => ({
   folders: [],
   images: [],
   dirLength: 0,
+  notify: false,
   foldersLength: 0,
   imagesLength: 0,
   selectedFolders: [],
@@ -46,6 +47,8 @@ export const useFileFetch = create<FileFetchProp>((set, get) => ({
     set((state) => ({ selectedImages: [...state.selectedImages, selectedFile] })),
 
   getDir: async (path: string) => {
+    if (path === initialPath && !(await fs.exists(path))) fs.mkdir(initialPath);
+
     try {
       const result = await fs.lstat(path);
       const images = result.filter((e) => e.type === "file");
@@ -70,6 +73,7 @@ export const useFileFetch = create<FileFetchProp>((set, get) => ({
   createFolder: async (folderName: string, path: string) => {
     try {
       await fs.mkdir(`${path}/${folderName}`);
+      set((state) => ({ notify: !state.notify }));
     } catch (error) {
       console.log(error);
     }

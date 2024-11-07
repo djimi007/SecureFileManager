@@ -24,7 +24,7 @@ export default function ImagePage() {
 
   return (
     <View style={styles.container}>
-      <SercurDivider />
+      <SercurDivider pageTitle="Tous Les Images" />
       <View style={{ alignItems: "center", marginTop: hp(1), flex: 1 }}>
         <FlatList
           showsVerticalScrollIndicator={false}

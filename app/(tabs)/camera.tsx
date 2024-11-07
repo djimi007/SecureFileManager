@@ -1,9 +1,10 @@
-import { useIsFocused } from "@react-navigation/native";
-import { Link } from "expo-router";
-import { useEffect, useRef, useState } from "react";
-import { StyleSheet, Text, View, SafeAreaView, Platform, Pressable } from "react-native";
 import { useAppState } from "@react-native-community/hooks";
+import { useIsFocused } from "@react-navigation/native";
+import { useEffect, useRef, useState } from "react";
+import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import {
   Camera,
   CameraPosition,
@@ -12,12 +13,7 @@ import {
   useCameraPermission,
   useMicrophonePermission,
 } from "react-native-vision-camera";
-import { useLayoutState } from "../../AppState/fabvisible";
-import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { hp, wp } from "../../utils/dimonsions";
-import { Card, Chip } from "react-native-paper";
-import { Colors } from "../../constants/Colors";
-import { Image } from "expo-image";
 
 export default function CameraPage() {
   const camera = useRef<Camera>(null);

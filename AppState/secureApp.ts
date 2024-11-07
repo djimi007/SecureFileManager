@@ -1,10 +1,9 @@
 import { create } from "zustand";
 
-import { persist, createJSONStorage } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 
-import * as RNFS from "react-native-fs";
-import zustandStorage from "./storage";
 import { LocalAuthentication } from "../utils/constant";
+import zustandStorage from "./storage";
 
 type StateProp = {
   secure: boolean;
@@ -20,7 +19,7 @@ const useSecureApp = create(
       secure: false,
       result: false,
       checkAuth: async () => {
-        if (!get().secure) {
+        if (get().secure) {
           if (await get().getResult()) {
             set({ secure: false });
           } else {
@@ -32,8 +31,8 @@ const useSecureApp = create(
         return (await LocalAuthentication.authenticateAsync()).success;
       },
       setSecure: async (val: boolean) => {
-        if (!val && (await get().getResult())) {
-          set({ secure: val });
+        if (val && (await get().getResult())) {
+          set({ secure: false });
         } else {
           set({ secure: true });
         }

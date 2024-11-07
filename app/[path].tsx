@@ -1,19 +1,19 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
-import { Stack, useLocalSearchParams } from "expo-router";
-import { Image } from "expo-image";
-import { useFoucsed } from "../AppState/backState";
-import { Appbar, Icon, Portal, Surface } from "react-native-paper";
-import { hp, wp } from "../utils/dimonsions";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { BlackFolderTab, WhiteFolderTab } from "../utils/pages&svgUtils";
-import { Entypo } from "@expo/vector-icons";
-import { Colors } from "../constants/Colors";
 import ViewPager from "@components/pages/ViewPager";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { Entypo, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { Stack, useLocalSearchParams } from "expo-router";
+import React, { useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
+import { Appbar } from "react-native-paper";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Colors } from "../constants/Colors";
+import { hp, wp } from "../utils/dimonsions";
+import { WhiteFolderTab } from "../utils/pages&svgUtils";
+import Share from "react-native-share";
 
 const ImageDetails = () => {
   const { path, filename } = useLocalSearchParams();
+
+  const [name, setFileName] = useState(filename);
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
@@ -33,11 +33,11 @@ const ImageDetails = () => {
             </View>
             <View style={{ flex: 1 }}>
               <Text style={{ fontSize: wp(4), fontWeight: "bold" }}>New Dossier</Text>
-              <Text>{filename}</Text>
+              <Text>{name}</Text>
             </View>
             <Entypo name="dots-three-vertical" size={wp(8)} color="black" />
           </View>
-          <ViewPager path={path} />
+          <ViewPager path={path} setFileName={setFileName} />
         </View>
       </SafeAreaView>
     </>

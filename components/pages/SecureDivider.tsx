@@ -1,12 +1,11 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useState } from "react";
-import { hp, wp } from "../../utils/dimonsions";
 import { Entypo } from "@expo/vector-icons";
+import React from "react";
+import { Text, View } from "react-native";
 import { Divider } from "react-native-paper";
-import { LocalAuthentication } from "../../utils/constant";
 import useSecureApp from "../../AppState/secureApp";
+import { hp, wp } from "../../utils/dimonsions";
 
-const SercurDivider = () => {
+const SercurDivider = ({ pageTitle }: { pageTitle: string }) => {
   const { secure, setSecure } = useSecureApp();
 
   return (
@@ -20,13 +19,13 @@ const SercurDivider = () => {
           justifyContent: "center",
         }}
       >
-        <Text style={{ flex: 1, fontWeight: "600", fontSize: wp(4) }}>Tous Les Dossier</Text>
+        <Text style={{ flex: 1, fontWeight: "600", fontSize: wp(4.5) }}>{pageTitle}</Text>
         <Entypo
           name={secure ? "lock" : "lock-open"}
-          size={wp(7)}
+          size={wp(7.5)}
           color="black"
           onPress={() => {
-            setSecure(!secure);
+            setSecure(secure);
           }}
         />
       </View>
@@ -43,5 +42,3 @@ const SercurDivider = () => {
 };
 
 export default SercurDivider;
-
-const styles = StyleSheet.create({});

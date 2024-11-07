@@ -1,16 +1,16 @@
 import * as React from "react";
 import { FAB, Portal, PaperProvider } from "react-native-paper";
 import { hp } from "../../utils/dimonsions";
-import { useLayoutState } from "../../AppState/fabvisible";
-import { StyleSheet } from "react-native";
-import { useFileFetch } from "../../AppState/fetchFiles";
+import { useDialog, useLayoutState } from "../../AppState/fabvisible";
+
+import FolderCreation from "./dialogtest";
 
 const FabGroup = () => {
   const [state, setState] = React.useState({ open: false });
 
   const visibleFab = useLayoutState((state) => state.visibleFab);
 
-  const createFolder = useFileFetch((state) => state.createFolder);
+  const { visible, showDialog, dimissDialog } = useDialog();
 
   const onStateChange = ({ open }: { open: boolean }) => setState({ open });
 
@@ -21,6 +21,7 @@ const FabGroup = () => {
       <FAB.Group
         fabStyle={{ backgroundColor: "white" }}
         backdropColor="transparent"
+        color="black"
         style={{ marginBottom: hp(9) }}
         open={open && visibleFab}
         visible={visibleFab}
@@ -29,8 +30,11 @@ const FabGroup = () => {
         actions={[
           {
             icon: "folder",
+            labelStyle: { color: "black" },
             label: "nv dossier",
-            onPress: () => {},
+            onPress: () => {
+              showDialog();
+            },
             color: "black",
             style: { backgroundColor: "white" },
           },

@@ -1,25 +1,29 @@
-import { Surface } from "react-native-paper";
 import { Image } from "expo-image";
-import { wp, hp } from "../../utils/dimonsions";
-import { Directions, Gesture, GestureDetector } from "react-native-gesture-handler";
 import { useEffect, useState } from "react";
+import { Directions, Gesture, GestureDetector } from "react-native-gesture-handler";
+import { Modal, Portal, Surface } from "react-native-paper";
+import Animated, { FadeIn, SlideInLeft, SlideInRight } from "react-native-reanimated";
 import { useFileFetch } from "../../AppState/fetchFiles";
-import Animated, {
-  FadeIn,
-  FadeOut,
-  SlideInLeft,
-  SlideInRight,
-  SlideInUp,
-  runOnJS,
-} from "react-native-reanimated";
+import { hp, wp } from "../../utils/dimonsions";
 
-import Share from "react-native-share";
-import { ToastAndroid } from "react-native";
 import { useLayoutState } from "../../AppState/fabvisible";
+import { Entypo, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
+import { View } from "react-native";
+import Share from "react-native-share";
+import { fs } from "../../utils/constant";
+import MyDialog from "@components/paperUtils/dialogtest";
 
-export default function PageView({ path }: { path: string | string[] }) {
-  const { getImage, images } = useFileFetch();
+interface Prpos {
+  setFileName: React.Dispatch<React.SetStateAction<string | string[]>>;
+  path: string | string[];
+}
 
+export default function PageView({ path, setFileName }: Prpos) {
+  const { getImage, images, editFile } = useFileFetch();
+
+  const [visible, setVisible] = useState(false);
+
+  const showModal = () => setVisible(true);
   const { setFabVisible } = useLayoutState();
 
   const [displayedPath, setDisplayedPath] = useState(path);
@@ -32,81 +36,97 @@ export default function PageView({ path }: { path: string | string[] }) {
   }, []);
 
   enum EntringProps {
-    null,
-    Right,
-    Left,
+    NULL,
+    RIGHT,
+    LEFT,
   }
 
   const AnimatedSurface = Animated.createAnimatedComponent(Surface);
 
-  const [entering, setEntring] = useState<EntringProps>(EntringProps.null);
+  const [entering, setEntring] = useState<EntringProps>(EntringProps.NULL);
+
+  console.log(entering);
 
   const compose = Gesture.Race(
     Gesture.Fling()
       .direction(Directions.RIGHT)
       .onEnd(() => {
-        setEntring(EntringProps.Left);
+        const newSelectedItem = selectedItem - 1;
+        setEntring(EntringProps.LEFT);
         if (selectedItem < 0) return;
-        setSelectedItem(selectedItem - 1);
-        setDisplayedPath(images.at(selectedItem - 1)!.path);
+        setSelectedItem(newSelectedItem);
+        setDisplayedPath(images.at(newSelectedItem)!.path);
+        setFileName(images.at(newSelectedItem)!.filename);
       })
       .runOnJS(true),
     Gesture.Fling()
       .direction(Directions.LEFT)
       .onEnd(() => {
-        setEntring(EntringProps.Right);
+        setEntring(EntringProps.RIGHT);
         if (selectedItem > images.length - 2) return;
-
-        setSelectedItem(selectedItem + 1);
-        setDisplayedPath(images.at(selectedItem + 1)!.path);
-      })
-      .runOnJS(true),
-    Gesture.Fling()
-      .direction(Directions.UP)
-
-      .onEnd(() => {
-        Share.open({
-          url: `file://${displayedPath!.toLocaleString()}`,
-        })
-          .then((e) => {
-            if (e.success) {
-              ToastAndroid.show("Picture Sended Seccessfully", ToastAndroid.LONG);
-            } else {
-              ToastAndroid.show("Picture Send Cancled", ToastAndroid.LONG);
-            }
-          })
-          .catch((e) => {
-            console.log(e.message);
-          });
+        const newSelectedItem = selectedItem + 1;
+        setSelectedItem(newSelectedItem);
+        setDisplayedPath(images.at(newSelectedItem)!.path);
+        setFileName(images.at(newSelectedItem)!.filename);
       })
       .runOnJS(true)
   );
 
   return (
-    <GestureDetector gesture={compose}>
-      <AnimatedSurface
-        entering={
-          entering === EntringProps.null
-            ? FadeIn
-            : entering === EntringProps.Left
-            ? SlideInLeft
-            : SlideInRight
-        }
-        theme={{ colors: { elevation: "black" } }}
-        elevation={5}
+    <>
+      <GestureDetector gesture={compose}>
+        <AnimatedSurface
+          entering={
+            entering === EntringProps.NULL
+              ? FadeIn
+              : entering === EntringProps.LEFT
+              ? SlideInLeft
+              : SlideInRight
+          }
+          theme={{ colors: { elevation: "black" } }}
+          elevation={5}
+          style={{
+            backgroundColor: "white",
+            alignItems: "center",
+            borderRadius: wp(15),
+            overflow: "hidden",
+          }}
+        >
+          <Image
+            key={selectedItem}
+            source={{ uri: `file://${displayedPath!.toLocaleString()}` }}
+            style={{ width: wp(88), height: hp(73) }}
+          />
+        </AnimatedSurface>
+      </GestureDetector>
+      <View
         style={{
-          alignItems: "center",
-          borderRadius: wp(15),
-          overflow: "hidden",
+          flexDirection: "row",
+          width: wp(100),
+          justifyContent: "space-evenly",
+          marginTop: hp(4),
         }}
       >
-        <Image
-          // placeholder={b}
-          key={selectedItem}
-          source={{ uri: `file://${displayedPath!.toLocaleString()}` }}
-          style={{ width: wp(88), height: hp(75) }}
+        <Entypo
+          name="share"
+          size={wp(8)}
+          color="black"
+          onPress={() => {
+            Share.open({ url: `file://${displayedPath!.toLocaleString()}` });
+          }}
         />
-      </AnimatedSurface>
-    </GestureDetector>
+        <Feather
+          name="edit"
+          size={wp(8)}
+          color="black"
+          onPress={() => {
+            setEntring(EntringProps.NULL);
+            setVisible(true);
+          }}
+        />
+        <MaterialCommunityIcons name="delete" size={wp(8)} color="black" />
+      </View>
+      <MyDialog visible={visible} setVisible={setVisible} />
+    </>
   );
 }

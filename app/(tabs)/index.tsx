@@ -1,41 +1,32 @@
-import React, { useEffect, useMemo, useState } from "react";
-import {
-  StyleSheet,
-  FlatList,
-  View,
-  Pressable,
-  Text,
-  Button,
-  BackHandler,
-  AppState,
-  Alert,
-} from "react-native";
+import React, { useCallback, useEffect } from "react";
+import { FlatList, StyleSheet, View } from "react-native";
 
-import useStateApp from "../../AppState/secureApp";
-import { hp, wp } from "../../utils/dimonsions";
 import FolderItem from "@components/pages/FolderItem";
-import { useFileFetch } from "../../AppState/fetchFiles";
+import MyDialog from "@components/paperUtils/dialogtest";
 import FabGroup from "@components/paperUtils/fabtest";
 import { useLayoutState } from "../../AppState/fabvisible";
-import MyDialog from "@components/paperUtils/dialogtest";
+import { useFileFetch } from "../../AppState/fetchFiles";
 import { usePath } from "../../AppState/pathstate";
 import { initialPath } from "../../utils/constant";
+import { hp, wp } from "../../utils/dimonsions";
 
-import useSecureApp from "../../AppState/secureApp";
 import SercurDivider from "@components/pages/SecureDivider";
+import { useAppState, useBackHandler } from "@react-native-community/hooks";
 import { router } from "expo-router";
 import { useFoucsed } from "../../AppState/backState";
-import { useBackHandler, useAppState } from "@react-native-community/hooks";
+import useSecureApp from "../../AppState/secureApp";
 
 import { useFocusEffect } from "@react-navigation/native";
+
 import { Alerte } from "../../utils/alert";
+import FolderCreation from "@components/paperUtils/dialogtest";
 
 export default function App() {
-  const { folders, getDir, dirLength } = useFileFetch();
+  const { folders, getDir, dirLength, notify } = useFileFetch();
 
   const setPathOnBackPress = usePath((state) => state.setPathOnBackPress);
 
-  const { secure } = useSecureApp();
+  const { secure, checkAuth } = useSecureApp();
 
   const { path, setPath } = usePath();
   const { isFoucsed, setIsFoucsed } = useFoucsed();
@@ -68,18 +59,18 @@ export default function App() {
         return true;
       }
     } else {
-      Alerte();
+      checkAuth();
       return true;
     }
   });
 
   useEffect(() => {
     getDir(path);
-  }, [path, dirLength]);
+  }, [path, dirLength, notify]);
 
   return (
     <View style={styles.container}>
-      <SercurDivider />
+      <SercurDivider pageTitle="Tous Les Dossiers" />
       <View style={{ marginTop: hp(1), paddingHorizontal: hp(1) }}>
         <FlatList
           showsVerticalScrollIndicator={false}
@@ -90,7 +81,7 @@ export default function App() {
         />
       </View>
       {visibleFab && <FabGroup />}
-      <MyDialog />
+      <FolderCreation />
     </View>
   );
 }
