@@ -21,9 +21,6 @@ interface Prpos {
 export default function PageView({ path, setFileName }: Prpos) {
   const { getImage, images, editFile } = useFileFetch();
 
-  const [visible, setVisible] = useState(false);
-
-  const showModal = () => setVisible(true);
   const { setFabVisible } = useLayoutState();
 
   const [displayedPath, setDisplayedPath] = useState(path);
@@ -121,12 +118,10 @@ export default function PageView({ path, setFileName }: Prpos) {
           color="black"
           onPress={() => {
             setEntring(EntringProps.NULL);
-            setVisible(true);
           }}
         />
         <MaterialCommunityIcons name="delete" size={wp(8)} color="black" />
       </View>
-      <MyDialog visible={visible} setVisible={setVisible} />
     </>
   );
 }

@@ -16,9 +16,9 @@ npx expo prebuild --clean
 
 2. for dev build:
 
-   ```bash
-   npm run dev-build
-   ```
+```bash
+npm run dev-build
+```
 
 3. run release build :
 

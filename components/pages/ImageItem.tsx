@@ -1,22 +1,18 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import React, { memo, useEffect, useState } from "react";
-import * as RNFS from "react-native-fs";
+import React, { memo, useState } from "react";
+import { Pressable, StyleSheet } from "react-native";
+
+import { AntDesign } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import { hp, isEven, wp } from "../../utils/dimonsions";
+import { Link } from "expo-router";
 import { ReactNativeBlobUtilStat } from "react-native-blob-util";
 import { useFileFetch } from "../../AppState/fetchFiles";
-import { AntDesign } from "@expo/vector-icons";
-import { Link } from "expo-router";
-import { useFoucsed } from "../../AppState/backState";
+import { hp, isEven, wp } from "../../utils/dimonsions";
 
 const ImageItem = ({ item }: { item: ReactNativeBlobUtilStat }) => {
   const blurhash = "LEHV6nWB2yk8pyo0adR*.7kCMdnj";
   const imageIndex = useFileFetch((state) => state.getItemIndex(item));
   const [clicked, setClicked] = useState(false);
   const addToSelectedFiles = useFileFetch((state) => state.addToSelectedImages);
-  const option = {
-    url: `file://${item.path}`,
-  };
 
   return (
     <Link

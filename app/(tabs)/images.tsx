@@ -1,26 +1,14 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { StyleSheet, FlatList, View, Pressable, Text, Button } from "react-native";
+import React, { useState } from "react";
+import { FlatList, StyleSheet, View } from "react-native";
 
-import Item from "@components/pages/FolderItem";
-import useStateApp from "../../AppState/secureApp";
 import { hp, wp } from "../../utils/dimonsions";
-import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
-import * as rnfs from "react-native-fs";
 
-import * as Lonki from "expo-linking";
-import FolderItem from "@components/pages/FolderItem";
-import { useFileFetch } from "../../AppState/fetchFiles";
-import MyComponent from "@components/paperUtils/dialogtest";
-import FabGroup from "@components/paperUtils/fabtest";
 import ImageItem from "@components/pages/ImageItem";
 import SercurDivider from "@components/pages/SecureDivider";
+import { useFileFetch } from "../../AppState/fetchFiles";
 
 export default function ImagePage() {
   const images = useFileFetch((state) => state.images);
-
-  const [state, setState] = React.useState({ open: false });
-
-  const [visible, setVisible] = useState(false);
 
   return (
     <View style={styles.container}>

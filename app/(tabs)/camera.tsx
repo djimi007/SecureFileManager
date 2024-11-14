@@ -99,7 +99,7 @@ export default function CameraPage() {
         video
         format={format}
       /> */}
-      <CameraView style={StyleSheet.absoluteFill} mode="picture" ref={cameraRef} />
+      <CameraView style={StyleSheet.absoluteFill} ref={cameraRef} />
 
       <Ionicons
         name={flash === "off" ? "flash-off" : "flash"}

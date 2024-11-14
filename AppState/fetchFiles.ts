@@ -18,9 +18,7 @@ type FileFetchProp = {
   addToSelectedImages: (selectedFile: ReactNativeBlobUtilStat) => void;
   addToSelectedFolders: (selectedFile: ReactNativeBlobUtilStat) => void;
   getDir: (path: string) => Promise<void>;
-
   getImage: (path: string | string[]) => ReactNativeBlobUtilStat;
-
   getItemIndex: (item: ReactNativeBlobUtilStat) => number;
   createFolder: (folderName: string, path: string) => Promise<void>;
   deleteFiles: (selectedFiles: ReactNativeBlobUtilStat[]) => Promise<void>;
@@ -84,6 +82,7 @@ export const useFileFetch = create<FileFetchProp>((set, get) => ({
         console.log(e);
       });
     });
+    set((state) => ({ notify: !state.notify }));
   },
   editFile: async (selectedFile: ReactNativeBlobUtilStat, name: string) => {
     try {
@@ -95,6 +94,7 @@ export const useFileFetch = create<FileFetchProp>((set, get) => ({
     } catch (e) {
       console.log(e);
     }
+    set((state) => ({ notify: !state.notify }));
   },
 
   shareFiles: (selectedFiles: ReactNativeBlobUtilStat[]) => {
