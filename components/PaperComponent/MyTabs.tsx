@@ -1,24 +1,22 @@
+import { Image } from "expo-image";
+import { StatusBar } from "expo-status-bar";
+import { Appbar } from "react-native-paper";
+import { createMaterialBottomTabNavigator } from "react-native-paper/react-navigation";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useFoucsed } from "../../AppState/backState";
+import { useLayoutState } from "../../AppState/fabvisible";
 import App from "../../app/(tabs)";
 import CameraPage from "../../app/(tabs)/camera";
+import ImagePage from "../../app/(tabs)/images";
+import { Colors } from "../../constants/Colors";
+import { wp } from "../../utils/dimonsions";
 import {
   BlackCameraTab,
   BlackFolderTab,
   WhiteCameraTab,
   WhiteFolderTab,
 } from "../../utils/pages&svgUtils";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Appbar } from "react-native-paper";
-import { createMaterialBottomTabNavigator } from "react-native-paper/react-navigation";
-import { wp } from "../../utils/dimonsions";
-import { useLayoutState } from "../../AppState/fabvisible";
-import ImagePage from "../../app/(tabs)/images";
-import { StatusBar } from "expo-status-bar";
-import { Image } from "expo-image";
-import { Colors } from "../../constants/Colors";
-import { useFoucsed } from "../../AppState/backState";
 
-import { Easing } from "react-native-reanimated";
-import ImageDetails from "../../app/[path]";
 const Tab = createMaterialBottomTabNavigator();
 export default function MyTabs() {
   const setFabVisible = useLayoutState((state) => state.setFabVisible);

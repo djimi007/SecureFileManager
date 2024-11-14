@@ -1,9 +1,8 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 
 import FolderItem from "@components/pages/FolderItem";
-import MyDialog from "@components/paperUtils/dialogtest";
-import FabGroup from "@components/paperUtils/fabtest";
+
 import { useLayoutState } from "../../AppState/fabvisible";
 import { useFileFetch } from "../../AppState/fetchFiles";
 import { usePath } from "../../AppState/pathstate";
@@ -18,8 +17,9 @@ import useSecureApp from "../../AppState/secureApp";
 
 import { useFocusEffect } from "@react-navigation/native";
 
+import FolderCreation from "@components/PaperComponent/DialogFolder";
+import FabGroup from "@components/PaperComponent/Fab";
 import { Alerte } from "../../utils/alert";
-import FolderCreation from "@components/paperUtils/dialogtest";
 
 export default function App() {
   const { folders, getDir, dirLength, notify } = useFileFetch();

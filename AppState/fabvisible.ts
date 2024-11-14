@@ -16,7 +16,13 @@ export const useLayoutState = create<Props>((set) => ({
   setFabVisible: (new_visible: boolean) => set(() => ({ visibleFab: new_visible })),
 }));
 
-export const useDialog = create<DialogProp>((set) => ({
+export const useDialogFolder = create<DialogProp>((set) => ({
+  visible: false,
+  showDialog: () => set({ visible: true }),
+  dimissDialog: () => set({ visible: false }),
+}));
+
+export const useDialogImage = create<DialogProp>((set) => ({
   visible: false,
   showDialog: () => set({ visible: true }),
   dimissDialog: () => set({ visible: false }),

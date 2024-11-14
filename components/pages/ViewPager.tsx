@@ -1,17 +1,15 @@
 import { Image } from "expo-image";
 import { useEffect, useState } from "react";
 import { Directions, Gesture, GestureDetector } from "react-native-gesture-handler";
-import { Modal, Portal, Surface } from "react-native-paper";
+import { Surface } from "react-native-paper";
 import Animated, { FadeIn, SlideInLeft, SlideInRight } from "react-native-reanimated";
 import { useFileFetch } from "../../AppState/fetchFiles";
 import { hp, wp } from "../../utils/dimonsions";
 
-import { useLayoutState } from "../../AppState/fabvisible";
 import { Entypo, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { View } from "react-native";
 import Share from "react-native-share";
-import { fs } from "../../utils/constant";
-import MyDialog from "@components/paperUtils/dialogtest";
+import { useLayoutState } from "../../AppState/fabvisible";
 
 interface Prpos {
   setFileName: React.Dispatch<React.SetStateAction<string | string[]>>;
@@ -23,16 +21,16 @@ export default function PageView({ path, setFileName }: Prpos) {
 
   const { setFabVisible } = useLayoutState();
 
-  const [displayedPath, setDisplayedPath] = useState(path);
-  const item = getImage(path);
+  const [displayedPath, setDisplayedPath] = useState<string | string[]>(path);
+  const item = getImage(displayedPath);
 
-  const [selectedItem, setSelectedItem] = useState(images.indexOf(item));
+  const [selectedItem, setSelectedItem] = useState<number>(images.indexOf(item));
 
   useEffect(() => {
     setFabVisible(false);
   }, []);
 
-  enum EntringProps {
+  enum EnteringProps {
     NULL,
     RIGHT,
     LEFT,
@@ -40,17 +38,15 @@ export default function PageView({ path, setFileName }: Prpos) {
 
   const AnimatedSurface = Animated.createAnimatedComponent(Surface);
 
-  const [entering, setEntring] = useState<EntringProps>(EntringProps.NULL);
-
-  console.log(entering);
+  const [entering, setEntering] = useState<EnteringProps>(EnteringProps.NULL);
 
   const compose = Gesture.Race(
     Gesture.Fling()
       .direction(Directions.RIGHT)
       .onEnd(() => {
         const newSelectedItem = selectedItem - 1;
-        setEntring(EntringProps.LEFT);
-        if (selectedItem < 0) return;
+        setEntering(EnteringProps.LEFT);
+        if (newSelectedItem < 0) return;
         setSelectedItem(newSelectedItem);
         setDisplayedPath(images.at(newSelectedItem)!.path);
         setFileName(images.at(newSelectedItem)!.filename);
@@ -59,7 +55,7 @@ export default function PageView({ path, setFileName }: Prpos) {
     Gesture.Fling()
       .direction(Directions.LEFT)
       .onEnd(() => {
-        setEntring(EntringProps.RIGHT);
+        setEntering(EnteringProps.RIGHT);
         if (selectedItem > images.length - 2) return;
         const newSelectedItem = selectedItem + 1;
         setSelectedItem(newSelectedItem);
@@ -74,9 +70,9 @@ export default function PageView({ path, setFileName }: Prpos) {
       <GestureDetector gesture={compose}>
         <AnimatedSurface
           entering={
-            entering === EntringProps.NULL
+            entering === EnteringProps.NULL
               ? FadeIn
-              : entering === EntringProps.LEFT
+              : entering === EnteringProps.LEFT
               ? SlideInLeft
               : SlideInRight
           }
@@ -91,7 +87,7 @@ export default function PageView({ path, setFileName }: Prpos) {
         >
           <Image
             key={selectedItem}
-            source={{ uri: `file://${displayedPath!.toLocaleString()}` }}
+            source={{ uri: `file://${displayedPath.toLocaleString()}` }}
             style={{ width: wp(88), height: hp(73) }}
           />
         </AnimatedSurface>
@@ -109,7 +105,7 @@ export default function PageView({ path, setFileName }: Prpos) {
           size={wp(8)}
           color="black"
           onPress={() => {
-            Share.open({ url: `file://${displayedPath!.toLocaleString()}` });
+            Share.open({ url: `file://${displayedPath.toLocaleString()}` });
           }}
         />
         <Feather
@@ -117,7 +113,7 @@ export default function PageView({ path, setFileName }: Prpos) {
           size={wp(8)}
           color="black"
           onPress={() => {
-            setEntring(EntringProps.NULL);
+            setEntering(EnteringProps.NULL);
           }}
         />
         <MaterialCommunityIcons name="delete" size={wp(8)} color="black" />

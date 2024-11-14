@@ -3,11 +3,11 @@ import { useState } from "react";
 import { StyleSheet, Text } from "react-native";
 import { Button, Modal, Portal, TextInput } from "react-native-paper";
 import { useFileFetch } from "../../AppState/fetchFiles";
-import { useDialog } from "../../AppState/fabvisible";
+import { useDialogFolder } from "../../AppState/fabvisible";
 import { usePath } from "../../AppState/pathstate";
 
 const FolderCreation = () => {
-  const { visible, dimissDialog } = useDialog();
+  const { visible, dimissDialog } = useDialogFolder();
 
   const [folderName, setFolderName] = useState("");
   const { path } = usePath();

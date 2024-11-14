@@ -9,13 +9,15 @@ import { Image } from "expo-image";
 import { hp, wp } from "../../utils/dimonsions";
 import { media } from "../../utils/constant";
 import { usePath } from "../../AppState/pathstate";
-import { useSharedValue } from "react-native-reanimated";
+import { useFileFetch } from "../../AppState/fetchFiles";
 
 export default function CameraPage() {
   const [flash, setFlash] = useState<FlashMode>("off");
   const [photoSelected, setPhotoSelected] = useState(true);
   const [postition, setPosition] = useState<CameraType>("back");
   const { path } = usePath();
+
+  const { createImageFile } = useFileFetch();
 
   const cameraRef = useRef<CameraView>(null);
 
@@ -52,25 +54,11 @@ export default function CameraPage() {
   }
 
   const takePhoto = async () => {
-    // const photo = await camera?.current?.takePhoto({
-    //   flash: flash,
-    // });
-
-    const pic = await cameraRef?.current?.takePictureAsync({
+    const photo = await cameraRef?.current?.takePictureAsync({
       quality: 1,
     });
 
-    console.log(pic);
-    if (!pic) console.warn("try again");
-
-    try {
-      await media.writeToMediafile("file://" + path + "/filename.png", pic!.uri);
-      console.log("file://" + path + "/filename.png");
-    } catch (error) {
-      console.log("====================================");
-      console.log(error);
-      console.log("====================================");
-    }
+    createImageFile(path, photo);
   };
 
   const onPressFlash = () => {
@@ -87,18 +75,6 @@ export default function CameraPage() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      {/* <Camera
-        ref={cameraRef}
-        focusable
-        enableHighQualityPhotos
-        style={StyleSheet.absoluteFill}
-        device={device}
-        isActive={isActive}
-        exposure={2}
-        photo
-        video
-        format={format}
-      /> */}
       <CameraView style={StyleSheet.absoluteFill} ref={cameraRef} />
 
       <Ionicons
