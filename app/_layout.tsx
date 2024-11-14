@@ -1,8 +1,4 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useFonts } from "expo-font";
-import { SplashScreen, Stack } from "expo-router";
-import * as Updates from "expo-updates";
-import { useEffect } from "react";
+import { Stack } from "expo-router";
 
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { PaperProvider } from "react-native-paper";
@@ -22,22 +18,6 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
-  useEffect(() => {
-    async function onFetchUpdateAsync() {
-      try {
-        const update = await Updates.checkForUpdateAsync();
-
-        if (update.isAvailable) {
-          await Updates.fetchUpdateAsync();
-          await Updates.reloadAsync();
-        }
-      } catch (error) {
-        // alert(error);
-      }
-    }
-    onFetchUpdateAsync();
-  }, []);
-
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <PaperProvider>

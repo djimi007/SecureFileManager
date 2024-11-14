@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
-import { useCameraPermission, useMicrophonePermission } from "react-native-vision-camera";
+
 import { requestPermission } from "../modules/permission-module";
 import { useFirstLaunch } from "../AppState/firstlaunch";
+import { useCameraPermissions, useMicrophonePermissions } from "expo-camera";
 
 export const usePermissions = () => {
   const firstLaunch = useFirstLaunch((state) => state.firstLaunch);
   const [value, setValue] = useState(false);
-  const { hasPermission: hasCamPermission } = useCameraPermission();
-  const { hasPermission: hasMicPermission } = useMicrophonePermission();
+
+  const [hasCamPermission, requestCamPermission] = useCameraPermissions();
+
+  const [hasMicPermission, requestMicPermission] = useMicrophonePermissions();
 
   useEffect(() => {
     const checkPermissions = async () => {

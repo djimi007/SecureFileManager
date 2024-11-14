@@ -2,69 +2,52 @@ import { useAppState } from "@react-native-community/hooks";
 import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useRef, useState } from "react";
 import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
-
+import { Camera, CameraType, CameraView, FlashMode } from "expo-camera";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
-import {
-  Camera,
-  CameraPosition,
-  TakePhotoOptions,
-  useCameraDevice,
-  useCameraPermission,
-  useMicrophonePermission,
-} from "react-native-vision-camera";
+
 import { hp, wp } from "../../utils/dimonsions";
+import { media } from "../../utils/constant";
+import { usePath } from "../../AppState/pathstate";
+import { useSharedValue } from "react-native-reanimated";
 
 export default function CameraPage() {
-  const camera = useRef<Camera>(null);
-
-  const [flash, setFlash] = useState<TakePhotoOptions["flash"]>("off");
+  const [flash, setFlash] = useState<FlashMode>("off");
   const [photoSelected, setPhotoSelected] = useState(true);
-  const [postition, setPosition] = useState<CameraPosition>("back");
+  const [postition, setPosition] = useState<CameraType>("back");
+  const { path } = usePath();
+
+  const cameraRef = useRef<CameraView>(null);
 
   const photoSelectedExp = photoSelected ? "black" : "white";
   const videoSelectedExp = !photoSelected ? "black" : "white";
 
-  const isFocused = useIsFocused();
-  const appState = useAppState();
-  const isActive = isFocused && appState === "active";
-
-  const { hasPermission: hasCamPermission, requestPermission: requestCamPermission } =
-    useCameraPermission();
-
-  const { hasPermission: hasMicPermission, requestPermission: requestMicPermission } =
-    useMicrophonePermission();
-
-  useEffect(() => {
-    const askPermission = async () => {
-      if (!hasCamPermission) {
-        return await requestCamPermission();
-      }
-      if (!hasMicPermission) return await requestMicPermission();
-    };
-
-    askPermission();
-  }, [hasCamPermission, hasMicPermission]);
-
-  const device = useCameraDevice(postition);
-
   const takePhoto = async () => {
-    const photo = await camera?.current?.takePhoto({
-      flash: flash, // 'auto' | 'off'
+    // const photo = await camera?.current?.takePhoto({
+    //   flash: flash,
+    // });
+
+    const pic = await cameraRef?.current?.takePictureAsync({
+      quality: 1,
     });
+
+    console.log(pic);
+    if (!pic) console.warn("try again");
+
+    try {
+      await media.writeToMediafile("file://" + path + "/filename.png", pic!.uri);
+      console.log("file://" + path + "/filename.png");
+    } catch (error) {
+      console.log("====================================");
+      console.log(error);
+      console.log("====================================");
+    }
   };
 
   const onPressFlash = () => {
     if (flash === "off") setFlash("on");
     else setFlash("off");
   };
-
-  if (device == null)
-    return (
-      <View style={{ alignItems: "center", justifyContent: "center" }}>
-        <Text style={{ fontSize: 20 }}>no camera device in this phone</Text>
-      </View>
-    );
 
   const onPressPicture = () => {
     setPhotoSelected(true);
@@ -75,16 +58,20 @@ export default function CameraPage() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <Camera
-        ref={camera}
+      {/* <Camera
+        ref={cameraRef}
         focusable
         enableHighQualityPhotos
         style={StyleSheet.absoluteFill}
         device={device}
         isActive={isActive}
+        exposure={2}
         photo
         video
-      />
+        format={format}
+      /> */}
+      <CameraView style={StyleSheet.absoluteFill} mode="picture" ref={cameraRef} />
+
       <Ionicons
         name={flash === "off" ? "flash-off" : "flash"}
         size={wp(7)}
@@ -100,20 +87,30 @@ export default function CameraPage() {
       />
       <View style={styles.tabTow}>
         <CustomPressable
+          videoSelectedExp={photoSelectedExp}
+          photoSelectedExp={videoSelectedExp}
+          text={"Photo"}
+          onPress={onPressPicture}
+        />
+        <CustomPressable
           videoSelectedExp={videoSelectedExp}
           photoSelectedExp={photoSelectedExp}
           text={"Video"}
           onPress={onPressVideo}
         />
-        <CustomPressable
-          videoSelectedExp={photoSelectedExp}
-          photoSelectedExp={videoSelectedExp}
-          text={"Picture"}
-          onPress={onPressPicture}
-        />
       </View>
 
-      <Image source={require("@/assets/icons/record.png")} style={styles.icon} />
+      {photoSelected ? (
+        <MaterialIcons
+          name="camera"
+          size={wp(18)}
+          color="white"
+          style={styles.iconPic}
+          onPress={takePhoto}
+        />
+      ) : (
+        <Image source={require("@/assets/icons/record.png")} style={styles.iconVid} />
+      )}
     </SafeAreaView>
   );
 }
@@ -149,9 +146,17 @@ const styles = StyleSheet.create({
     padding: wp(3),
     gap: wp(25),
   },
-  icon: {
-    width: wp(18),
-    height: wp(18),
+  iconVid: {
+    width: wp(19),
+    height: wp(19),
+    bottom: hp(3),
+    position: "absolute",
+    alignSelf: "center",
+  },
+  iconPic: {
+    zIndex: 99999,
+    backgroundColor: "black",
+    borderRadius: 8888,
     bottom: hp(3.5),
     position: "absolute",
     alignSelf: "center",

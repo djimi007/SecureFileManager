@@ -7,12 +7,11 @@ import {
 } from "react-native-gesture-handler";
 
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, Pressable, StyleSheet } from "react-native";
+import { View, Text, Pressable,  } from "react-native";
 
 import PageComponent from "@components/welcome_pages/pagesComponent";
 import { wp } from "../utils/dimonsions";
 import { requestPermission } from "../modules/permission-module";
-import { useCameraPermission, useMicrophonePermission } from "react-native-vision-camera";
 import { runOnJS } from "react-native-reanimated";
 import { styles } from "../constants/styles";
 import { pages } from "../utils/pages&svgUtils";
@@ -20,6 +19,7 @@ import { Redirect, router } from "expo-router";
 import { useLayoutState } from "../AppState/fabvisible";
 import { useFirstLaunch } from "../AppState/firstlaunch";
 import { usePermissions } from "../hooks/usePermission";
+import { useCameraPermissions, useMicrophonePermissions } from "expo-camera";
 const index = () => {
   const [selectedItem, setSelectedItem] = useState(0);
 
@@ -29,11 +29,11 @@ const index = () => {
 
   const permissionAgreed = usePermissions();
 
-  const { hasPermission: hasCamPermission, requestPermission: requestCamPermission } =
-    useCameraPermission();
+  const [hasCamPermission , requestCamPermission]=
+    useCameraPermissions();
 
-  const { hasPermission: hasMicPermission, requestPermission: requestMicPermission } =
-    useMicrophonePermission();
+  const [hasMicPermission , requestMicPermission] =
+    useMicrophonePermissions();
 
   useEffect(() => {
     setFirstLaunch(false);

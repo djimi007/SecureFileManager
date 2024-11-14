@@ -49,9 +49,11 @@
     },
     "plugins": [
       [
-        "expo-updates",
+        "expo-camera",
         {
-          "username": "djimi_007"
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera",
+          "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone",
+          "recordAudioAndroid": true
         }
       ],
       [
@@ -60,14 +62,7 @@
           "faceIDPermission": "Allow $(PRODUCT_NAME) to use Face ID."
         }
       ],
-      [
-        "react-native-vision-camera",
-        {
-          "cameraPermissionText": "$(PRODUCT_NAME) needs access to your Camera.",
-          "enableMicrophonePermission": true,
-          "microphonePermissionText": "$(PRODUCT_NAME) needs access to your Microphone."
-        }
-      ],
+
       [
         "expo-media-library",
         {
@@ -84,13 +79,7 @@
     "extra": {
       "router": {
         "origin": false
-      },
-      "eas": {
-        "projectId": "fb0ab1bc-671e-4567-afa5-87a46db0202e"
       }
-    },
-    "updates": {
-      "url": "https://u.expo.dev/fb0ab1bc-671e-4567-afa5-87a46db0202e"
     }
   }
 }
