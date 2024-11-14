@@ -1,8 +1,8 @@
 import { useAppState } from "@react-native-community/hooks";
 import { useIsFocused } from "@react-navigation/native";
 import { useEffect, useRef, useState } from "react";
-import { Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { Camera, CameraType, CameraView, FlashMode } from "expo-camera";
+import { Button, Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { Camera, CameraType, CameraView, FlashMode, useCameraPermissions } from "expo-camera";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 
@@ -21,6 +21,35 @@ export default function CameraPage() {
 
   const photoSelectedExp = photoSelected ? "black" : "white";
   const videoSelectedExp = !photoSelected ? "black" : "white";
+
+  const [permission, requestPermission] = useCameraPermissions();
+
+  if (!permission) {
+    // Camera permissions are still loading.
+    return <View />;
+  }
+
+  if (!permission.granted) {
+    // Camera permissions are not granted yet.
+    return (
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+        }}
+      >
+        <Text
+          style={{
+            textAlign: "center",
+            paddingBottom: 10,
+          }}
+        >
+          We need your permission to show the camera
+        </Text>
+        <Button onPress={requestPermission} title="grant permission" />
+      </View>
+    );
+  }
 
   const takePhoto = async () => {
     // const photo = await camera?.current?.takePhoto({
