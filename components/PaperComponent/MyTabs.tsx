@@ -23,12 +23,13 @@ export default function MyTabs() {
     <Tabs
       screenOptions={{
         title: "ProGallery",
+        headerTitleStyle: { fontSize: wp(6) },
         tabBarActiveTintColor: "black",
         headerTintColor: "white",
         tabBarShowLabel: false,
         headerRight: () => (
           <Image
-            style={{ tintColor: "white", height: wp(7), width: wp(6), marginRight: wp(6) }}
+            style={{ tintColor: "white", height: wp(6), width: wp(5), marginRight: wp(4) }}
             source={require("@/assets/data/change.png")}
           />
         ),

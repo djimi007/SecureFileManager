@@ -1,12 +1,34 @@
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
-import { CameraType, CameraView, FlashMode, useCameraPermissions } from "expo-camera";
+import {
+  CameraRecordingOptions,
+  CameraType,
+  CameraView,
+  FlashMode,
+  useCameraPermissions,
+} from "expo-camera";
 import { Image } from "expo-image";
 import { useRef, useState } from "react";
-import { Button, Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  Button,
+  Pressable,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 import { useFileFetch } from "../../AppState/fetchFiles";
 import { usePath } from "../../AppState/pathstate";
 import { hp, wp } from "../../utils/dimonsions";
+import {
+  interpolateColor,
+  runOnJS,
+  runOnUI,
+  useAnimatedStyle,
+  useSharedValue,
+} from "react-native-reanimated";
+import Animated from "react-native-reanimated";
 
 export default function CameraPage() {
   const [flash, setFlash] = useState<FlashMode>("off");
@@ -18,10 +40,24 @@ export default function CameraPage() {
 
   const cameraRef = useRef<CameraView>(null);
 
+  const [recording, setRecording] = useState<boolean>(false);
+
   const photoSelectedExp = photoSelected ? "black" : "white";
   const videoSelectedExp = !photoSelected ? "black" : "white";
 
   const [permission, requestPermission] = useCameraPermissions();
+
+  const AnimatedMaterialIcon = Animated.createAnimatedComponent(MaterialIcons);
+
+  const sv = useSharedValue(0);
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      backgroundColor: interpolateColor(sv.value, [0, 1], ["#020202", "#F60808"], "RGB", {
+        gamma: 0.1,
+      }),
+    };
+  });
 
   if (!permission) {
     // Camera permissions are still loading.
@@ -64,10 +100,39 @@ export default function CameraPage() {
   };
 
   const onPressPicture = () => {
-    setPhotoSelected(true);
+    runOnUI(() => {
+      sv.value = 0;
+      runOnJS(setRecording)(false);
+      runOnJS(setPhotoSelected)(true);
+    })();
   };
   const onPressVideo = () => {
-    setPhotoSelected(false);
+    runOnUI(() => {
+      sv.value = 1;
+      runOnJS(setPhotoSelected)(false);
+    })();
+  };
+
+  const startRecording = async () => {
+    // const result = await cameraRef.current?.recordAsync();
+    setRecording(true);
+    console.log("====================================");
+    // console.log(result);
+    console.log("tesr");
+
+    console.log("====================================");
+  };
+
+  const stopRecording = () => {
+    // cameraRef.current?.stopRecording();
+
+    setRecording(false);
+  };
+
+  const takeVideo = () => {
+    setRecording(!recording);
+    if (recording) stopRecording();
+    else startRecording();
   };
 
   return (
@@ -102,17 +167,13 @@ export default function CameraPage() {
         />
       </View>
 
-      {photoSelected ? (
-        <MaterialIcons
-          name="camera"
-          size={wp(18)}
-          color="white"
-          style={styles.iconPic}
-          onPress={takePhoto}
-        />
-      ) : (
-        <Image source={require("@/assets/icons/record.png")} style={styles.iconVid} />
-      )}
+      <AnimatedMaterialIcon
+        name={photoSelected ? "camera" : recording ? "stop" : "camera"}
+        size={wp(18)}
+        color="white"
+        style={[styles.icon, animatedStyle]}
+        onPress={photoSelected ? takePhoto : takeVideo}
+      />
     </SafeAreaView>
   );
 }
@@ -148,16 +209,9 @@ const styles = StyleSheet.create({
     padding: wp(3),
     gap: wp(25),
   },
-  iconVid: {
-    width: wp(19),
-    height: wp(19),
-    bottom: hp(3),
-    position: "absolute",
-    alignSelf: "center",
-  },
-  iconPic: {
+
+  icon: {
     zIndex: 99999,
-    backgroundColor: "black",
     borderRadius: 8888,
     bottom: hp(3.5),
     position: "absolute",
