@@ -21,7 +21,12 @@ function RootLayoutNav() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <PaperProvider>
-        <Stack screenOptions={{ title: "ProGallery" }}>
+        <Stack
+          screenOptions={{
+            title: "ProGallery",
+            statusBarColor: "black",
+          }}
+        >
           <Stack.Screen name="index" options={{ headerShown: false }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack>

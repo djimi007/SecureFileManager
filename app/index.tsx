@@ -7,11 +7,14 @@ import {
 } from "react-native-gesture-handler";
 
 import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Text, Pressable,  } from "react-native";
+import { View, Text, Pressable } from "react-native";
 
 import PageComponent from "@components/welcome_pages/pagesComponent";
 import { wp } from "../utils/dimonsions";
-import { requestPermission } from "../modules/permission-module";
+import {
+  requestExternalStroragePermission,
+  checkStoragePermission,
+} from "../modules/permission-module";
 import { runOnJS } from "react-native-reanimated";
 import { styles } from "../constants/styles";
 import { pages } from "../utils/pages&svgUtils";
@@ -23,33 +26,34 @@ import { useCameraPermissions, useMicrophonePermissions } from "expo-camera";
 const index = () => {
   const [selectedItem, setSelectedItem] = useState(0);
 
-  const setFirstLaunch = useFirstLaunch((state) => state.setFirstLaunch);
+  const { firstLaunch, setFirstLaunch } = useFirstLaunch();
 
   const setFabVisible = useLayoutState((state) => state.setFabVisible);
 
-  const permissionAgreed = usePermissions();
+  const [hasCamPermission, requestCamPermission] = useCameraPermissions();
 
-  const [hasCamPermission , requestCamPermission]=
-    useCameraPermissions();
-
-  const [hasMicPermission , requestMicPermission] =
-    useMicrophonePermissions();
+  const [hasMicPermission, requestMicPermission] = useMicrophonePermissions();
 
   useEffect(() => {
-    setFirstLaunch(false);
     setFabVisible(false);
   }, []);
 
-  if (permissionAgreed) return <Redirect href="/(tabs)" />;
-
   const askCameraPermission = async () => {
-    if (!hasCamPermission) {
-      return await requestCamPermission();
+    if (!hasCamPermission?.granted) {
+      await requestCamPermission();
+      return;
     }
   };
   const askMicPermission = async () => {
-    if (!hasMicPermission) return await requestMicPermission();
+    if (!hasMicPermission?.granted) await requestMicPermission();
+    return;
   };
+
+  const askExternalStoragePermission = async () => {
+    const isExternalStorageAvalible = await checkStoragePermission();
+    if (!isExternalStorageAvalible) return requestExternalStroragePermission();
+  };
+
   const compose = Gesture.Race(
     Gesture.Fling()
       .direction(Directions.RIGHT)
@@ -76,7 +80,7 @@ const index = () => {
         setSelectedItem(1);
         break;
       case 1:
-        await requestPermission();
+        askExternalStoragePermission();
         setSelectedItem(selectedItem + 1);
         break;
       case 2:
@@ -86,9 +90,12 @@ const index = () => {
       case 3:
         askMicPermission();
         router.replace("/(tabs)");
+        setFirstLaunch(false);
         break;
     }
   };
+
+  if (!firstLaunch) return <Redirect href={"/(tabs)"} />;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "black", padding: 20 }}>

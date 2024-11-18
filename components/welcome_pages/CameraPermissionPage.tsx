@@ -8,7 +8,6 @@ import Animated, {
   FadeInLeft,
   useAnimatedStyle,
   useSharedValue,
-  withRepeat,
   withTiming,
 } from "react-native-reanimated";
 

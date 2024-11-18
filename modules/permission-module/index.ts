@@ -13,8 +13,12 @@ export function hello(): string {
   return PermissionModule.hello();
 }
 
-export async function requestPermission(): Promise<boolean> {
-  return await PermissionModule.requestPermission();
+export async function checkStoragePermission(): Promise<boolean> {
+  return await PermissionModule.checkStoragePermission();
+}
+
+export function requestExternalStroragePermission() {
+  return PermissionModule.requestExternalStroragePermission();
 }
 
 export async function setValueAsync(value: string) {

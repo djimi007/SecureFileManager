@@ -1,21 +1,20 @@
 import { useEffect, useState } from "react";
 
-import { requestPermission } from "../modules/permission-module";
+import { checkStoragePermission } from "../modules/permission-module";
 import { useFirstLaunch } from "../AppState/firstlaunch";
 import { useCameraPermissions, useMicrophonePermissions } from "expo-camera";
 
 export const usePermissions = () => {
-  const firstLaunch = useFirstLaunch((state) => state.firstLaunch);
   const [value, setValue] = useState(false);
 
-  const [hasCamPermission, requestCamPermission] = useCameraPermissions();
+  const [hasCamPermission] = useCameraPermissions();
 
-  const [hasMicPermission, requestMicPermission] = useMicrophonePermissions();
+  const [hasMicPermission] = useMicrophonePermissions();
 
   useEffect(() => {
     const checkPermissions = async () => {
-      const hasExternalPermission = await requestPermission();
-      if (!firstLaunch && hasCamPermission && hasMicPermission && hasExternalPermission) {
+      const hasExternalPermission = await checkStoragePermission();
+      if (hasCamPermission?.granted && hasMicPermission?.granted && hasExternalPermission) {
         setValue(true);
       } else {
         setValue(false);
@@ -23,7 +22,11 @@ export const usePermissions = () => {
     };
 
     checkPermissions();
-  }, [firstLaunch, hasCamPermission, hasMicPermission]);
+
+    console.log("testdjimoj====================================");
+    console.log(hasCamPermission, hasMicPermission);
+    console.log("====================================");
+  }, [hasCamPermission?.granted, hasMicPermission?.granted]);
 
   return value;
 };
