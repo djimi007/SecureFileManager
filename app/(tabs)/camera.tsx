@@ -1,15 +1,12 @@
-import { useAppState } from "@react-native-community/hooks";
-import { useIsFocused } from "@react-navigation/native";
-import { useEffect, useRef, useState } from "react";
-import { Button, Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { Camera, CameraType, CameraView, FlashMode, useCameraPermissions } from "expo-camera";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { CameraType, CameraView, FlashMode, useCameraPermissions } from "expo-camera";
 import { Image } from "expo-image";
+import { useRef, useState } from "react";
+import { Button, Pressable, SafeAreaView, StyleSheet, Text, View } from "react-native";
 
-import { hp, wp } from "../../utils/dimonsions";
-import { media } from "../../utils/constant";
-import { usePath } from "../../AppState/pathstate";
 import { useFileFetch } from "../../AppState/fetchFiles";
+import { usePath } from "../../AppState/pathstate";
+import { hp, wp } from "../../utils/dimonsions";
 
 export default function CameraPage() {
   const [flash, setFlash] = useState<FlashMode>("off");

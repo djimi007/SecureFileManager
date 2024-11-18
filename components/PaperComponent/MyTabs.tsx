@@ -1,15 +1,11 @@
 import { Image } from "expo-image";
-import { StatusBar } from "expo-status-bar";
-import { Appbar } from "react-native-paper";
+import { Tabs } from "expo-router";
+import { View } from "react-native";
 import { createMaterialBottomTabNavigator } from "react-native-paper/react-navigation";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { useFoucsed } from "../../AppState/backState";
 import { useLayoutState } from "../../AppState/fabvisible";
-import App from "../../app/(tabs)";
-import CameraPage from "../../app/(tabs)/camera";
-import ImagePage from "../../app/(tabs)/images";
 import { Colors } from "../../constants/Colors";
-import { wp } from "../../utils/dimonsions";
+import { hp, wp } from "../../utils/dimonsions";
 import {
   BlackCameraTab,
   BlackFolderTab,
@@ -22,95 +18,97 @@ export default function MyTabs() {
   const setFabVisible = useLayoutState((state) => state.setFabVisible);
 
   const { setIsFoucsed } = useFoucsed();
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
-      <StatusBar style="inverted" backgroundColor="black" />
-      <Appbar style={{ backgroundColor: "black" }}>
-        <Appbar.Content
-          title="ProGallery"
-          color="white"
-          titleStyle={{ fontSize: wp(6), fontWeight: "600" }}
-        />
-        <Appbar.Action icon={require("@/assets/data/change.png")} color="white" />
-      </Appbar>
 
-      <Tab.Navigator
-        barStyle={{
+  return (
+    <Tabs
+      screenOptions={{
+        title: "ProGallery",
+        tabBarActiveTintColor: "black",
+        headerTintColor: "white",
+        tabBarShowLabel: false,
+        headerRight: () => (
+          <Image
+            style={{ tintColor: "white", height: wp(7), width: wp(6), marginRight: wp(6) }}
+            source={require("@/assets/data/change.png")}
+          />
+        ),
+        headerStyle: { backgroundColor: "black" },
+        tabBarStyle: {
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: Colors.background,
-        }}
-        activeIndicatorStyle={{
-          height: wp(13),
-          width: wp(13),
+          height: hp(8),
+        },
+        headerBackgroundContainerStyle: {
           backgroundColor: "black",
+        },
+      }}
+    >
+      <Tabs.Screen
+        name="index"
+        listeners={{
+          tabPress: () => {
+            setIsFoucsed(true);
+            setFabVisible(true);
+          },
         }}
-        compact
-        sceneAnimationType="shifting"
-        labeled={false}
-        initialRouteName="File"
-      >
-        <Tab.Screen
-          name="File"
-          component={App}
-          listeners={{
-            tabPress: () => {
-              setIsFoucsed(true);
-              setFabVisible(true);
-            },
-          }}
-          options={{
-            tabBarIcon: ({ focused }) =>
-              focused ? (
-                <WhiteFolderTab height={wp(6)} width={wp(7)} />
-              ) : (
-                <BlackFolderTab height={wp(6)} width={wp(7)} />
-              ),
-          }}
-        />
-        <Tab.Screen
-          name="Picture"
-          listeners={{
-            tabPress: () => {
-              setIsFoucsed(false);
-              setFabVisible(false);
-            },
-          }}
-          component={ImagePage}
-          options={{
-            tabBarIcon: ({ focused }) =>
-              focused ? (
+        options={{
+          tabBarIcon: ({ focused }) =>
+            focused ? (
+              <View style={{ padding: wp(3), backgroundColor: "black", borderRadius: wp(2.5) }}>
+                <WhiteFolderTab height={wp(7)} width={wp(7)} />
+              </View>
+            ) : (
+              <View>
+                <BlackFolderTab height={wp(7)} width={wp(7)} />
+              </View>
+            ),
+        }}
+      />
+      <Tabs.Screen
+        name="images"
+        listeners={{
+          tabPress: () => {
+            setIsFoucsed(false);
+            setFabVisible(false);
+          },
+        }}
+        options={{
+          tabBarIcon: ({ focused }) =>
+            focused ? (
+              <View style={{ padding: wp(4), backgroundColor: "black", borderRadius: wp(2.5) }}>
                 <Image
                   source={require("@/assets/data/milieux.png")}
                   style={{ height: wp(6), width: wp(6) }}
                 />
-              ) : (
-                <Image
-                  source={require("@/assets/data/milieux.png")}
-                  style={{ height: wp(6), width: wp(6), tintColor: "black" }}
-                />
-              ),
-          }}
-        />
-        <Tab.Screen
-          name="Camera"
-          listeners={{
-            tabPress: () => {
-              setIsFoucsed(false);
-              setFabVisible(false);
-            },
-          }}
-          component={CameraPage}
-          options={{
-            tabBarIcon: ({ focused }) =>
-              focused ? (
+              </View>
+            ) : (
+              <Image
+                source={require("@/assets/data/milieux.png")}
+                style={{ height: wp(6), width: wp(6), tintColor: "black" }}
+              />
+            ),
+        }}
+      />
+      <Tabs.Screen
+        name="camera"
+        listeners={{
+          tabPress: () => {
+            setIsFoucsed(false);
+            setFabVisible(false);
+          },
+        }}
+        options={{
+          tabBarIcon: ({ focused }) =>
+            focused ? (
+              <View style={{ padding: wp(3), backgroundColor: "black", borderRadius: wp(2.5) }}>
                 <WhiteCameraTab height={wp(7)} width={wp(8)} />
-              ) : (
-                <BlackCameraTab height={wp(7)} width={wp(8)} />
-              ),
-          }}
-        />
-      </Tab.Navigator>
-    </SafeAreaView>
+              </View>
+            ) : (
+              <BlackCameraTab height={wp(7)} width={wp(8)} />
+            ),
+        }}
+      />
+    </Tabs>
   );
 }

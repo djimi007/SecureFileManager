@@ -34,6 +34,8 @@ const index = () => {
 
   const [hasMicPermission, requestMicPermission] = useMicrophonePermissions();
 
+  const permissionAgreed = usePermissions();
+
   useEffect(() => {
     setFabVisible(false);
   }, []);
@@ -95,7 +97,7 @@ const index = () => {
     }
   };
 
-  if (!firstLaunch) return <Redirect href={"/(tabs)"} />;
+  if (!firstLaunch && permissionAgreed) return <Redirect href={"/(tabs)"} />;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "black", padding: 20 }}>

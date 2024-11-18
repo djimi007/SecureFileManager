@@ -22,10 +22,6 @@ export const usePermissions = () => {
     };
 
     checkPermissions();
-
-    console.log("testdjimoj====================================");
-    console.log(hasCamPermission, hasMicPermission);
-    console.log("====================================");
   }, [hasCamPermission?.granted, hasMicPermission?.granted]);
 
   return value;
