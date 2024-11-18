@@ -1,5 +1,6 @@
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import {
+  CameraMode,
   CameraRecordingOptions,
   CameraType,
   CameraView,
@@ -27,11 +28,15 @@ import {
   runOnUI,
   useAnimatedStyle,
   useSharedValue,
+  withTiming,
+  ZoomIn,
+  ZoomInRotate,
 } from "react-native-reanimated";
 import Animated from "react-native-reanimated";
 
 export default function CameraPage() {
   const [flash, setFlash] = useState<FlashMode>("off");
+
   const [photoSelected, setPhotoSelected] = useState(true);
   const [postition, setPosition] = useState<CameraType>("back");
   const { path } = usePath();
@@ -45,8 +50,6 @@ export default function CameraPage() {
   const photoSelectedExp = photoSelected ? "black" : "white";
   const videoSelectedExp = !photoSelected ? "black" : "white";
 
-  const [permission, requestPermission] = useCameraPermissions();
-
   const AnimatedMaterialIcon = Animated.createAnimatedComponent(MaterialIcons);
 
   const sv = useSharedValue(0);
@@ -58,33 +61,6 @@ export default function CameraPage() {
       }),
     };
   });
-
-  if (!permission) {
-    // Camera permissions are still loading.
-    return <View />;
-  }
-
-  if (!permission.granted) {
-    // Camera permissions are not granted yet.
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-        }}
-      >
-        <Text
-          style={{
-            textAlign: "center",
-            paddingBottom: 10,
-          }}
-        >
-          We need your permission to show the camera
-        </Text>
-        <Button onPress={requestPermission} title="grant permission" />
-      </View>
-    );
-  }
 
   const takePhoto = async () => {
     const photo = await cameraRef?.current?.takePictureAsync({
@@ -100,31 +76,29 @@ export default function CameraPage() {
   };
 
   const onPressPicture = () => {
-    runOnUI(() => {
-      sv.value = 0;
-      runOnJS(setRecording)(false);
-      runOnJS(setPhotoSelected)(true);
-    })();
+    sv.value = withTiming(0);
+    // Animate to 0
+    setRecording(false);
+    setPhotoSelected(true);
   };
+
   const onPressVideo = () => {
-    runOnUI(() => {
-      sv.value = 1;
-      runOnJS(setPhotoSelected)(false);
-    })();
+    sv.value = withTiming(1); // Animate to 1
+    setPhotoSelected(false);
   };
 
   const startRecording = async () => {
-    // const result = await cameraRef.current?.recordAsync();
     setRecording(true);
+    const result = await cameraRef.current?.recordAsync();
     console.log("====================================");
-    // console.log(result);
+    console.log(result);
     console.log("tesr");
 
     console.log("====================================");
   };
 
   const stopRecording = () => {
-    // cameraRef.current?.stopRecording();
+    cameraRef.current?.stopRecording();
 
     setRecording(false);
   };
@@ -137,7 +111,12 @@ export default function CameraPage() {
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
-      <CameraView style={StyleSheet.absoluteFill} ref={cameraRef} />
+      <CameraView
+        style={StyleSheet.absoluteFill}
+        ref={cameraRef}
+        mode={photoSelected ? "picture" : "video"}
+        flash={flash}
+      />
 
       <Ionicons
         name={flash === "off" ? "flash-off" : "flash"}
@@ -154,20 +133,21 @@ export default function CameraPage() {
       />
       <View style={styles.tabTow}>
         <CustomPressable
-          videoSelectedExp={photoSelectedExp}
-          photoSelectedExp={videoSelectedExp}
+          backGroundColor={!photoSelected ? "white" : "black"}
+          textColor={!photoSelected ? "black" : "white"}
           text={"Photo"}
           onPress={onPressPicture}
         />
         <CustomPressable
-          videoSelectedExp={videoSelectedExp}
-          photoSelectedExp={photoSelectedExp}
+          backGroundColor={photoSelected ? "white" : "black"}
+          textColor={photoSelected ? "black" : "white"}
           text={"Video"}
           onPress={onPressVideo}
         />
       </View>
 
       <AnimatedMaterialIcon
+        entering={ZoomIn.springify().damping(60).mass(2).stiffness(30).restSpeedThreshold(1)}
         name={photoSelected ? "camera" : recording ? "stop" : "camera"}
         size={wp(18)}
         color="white"
@@ -178,17 +158,17 @@ export default function CameraPage() {
   );
 }
 
-const CustomPressable = ({ videoSelectedExp, photoSelectedExp, text, onPress }: any) => (
+const CustomPressable = ({ backGroundColor, textColor, text, onPress }: any) => (
   <Pressable
     style={[
       styles.elementContainer,
       {
-        backgroundColor: videoSelectedExp,
+        backgroundColor: backGroundColor,
       },
     ]}
     onPress={onPress}
   >
-    <Text style={{ color: photoSelectedExp }}>{text}</Text>
+    <Text style={{ color: textColor }}>{text}</Text>
   </Pressable>
 );
 
@@ -202,8 +182,8 @@ const styles = StyleSheet.create({
     width: wp(25),
   },
   tabTow: {
-    marginTop: "auto",
     flexDirection: "row",
+    marginTop: "auto",
     backgroundColor: "white",
     justifyContent: "center",
     padding: wp(3),

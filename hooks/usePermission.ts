@@ -7,6 +7,7 @@ import { useCameraPermissions, useMicrophonePermissions } from "expo-camera";
 export const usePermissions = () => {
   const [value, setValue] = useState(false);
 
+  const [hasExternalStorage, setExternalSrorage] = useState(false);
   const [hasCamPermission] = useCameraPermissions();
 
   const [hasMicPermission] = useMicrophonePermissions();
@@ -14,6 +15,8 @@ export const usePermissions = () => {
   useEffect(() => {
     const checkPermissions = async () => {
       const hasExternalPermission = await checkStoragePermission();
+
+      setExternalSrorage(hasExternalPermission);
       if (hasCamPermission?.granted && hasMicPermission?.granted && hasExternalPermission) {
         setValue(true);
       } else {
@@ -22,7 +25,7 @@ export const usePermissions = () => {
     };
 
     checkPermissions();
-  }, [hasCamPermission?.granted, hasMicPermission?.granted]);
+  }, [hasCamPermission?.granted, hasMicPermission?.granted, hasExternalStorage]);
 
   return value;
 };

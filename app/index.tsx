@@ -53,6 +53,9 @@ const index = () => {
 
   const askExternalStoragePermission = async () => {
     const isExternalStorageAvalible = await checkStoragePermission();
+    console.log("====================================");
+    console.log(isExternalStorageAvalible);
+    console.log("====================================");
     if (!isExternalStorageAvalible) return requestExternalStroragePermission();
   };
 
