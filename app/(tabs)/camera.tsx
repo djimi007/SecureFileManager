@@ -1,43 +1,37 @@
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import {
-  CameraMode,
-  CameraRecordingOptions,
   CameraType,
   CameraView,
-  FlashMode,
-  useCameraPermissions,
+  FlashMode
 } from "expo-camera";
-import { Image } from "expo-image";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
-  Button,
   Pressable,
   SafeAreaView,
   StyleSheet,
   Text,
-  TouchableOpacity,
-  View,
+  View
 } from "react-native";
 
+import AnimatedMaterialIcon from "@components/animated/AnimatedMaterialIcon";
+import {
+  interpolateColor,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming
+} from "react-native-reanimated";
 import { useFileFetch } from "../../AppState/fetchFiles";
 import { usePath } from "../../AppState/pathstate";
 import { hp, wp } from "../../utils/dimonsions";
-import {
-  interpolateColor,
-  runOnJS,
-  runOnUI,
-  useAnimatedStyle,
-  useSharedValue,
-  withTiming,
-  ZoomIn,
-  ZoomInRotate,
-} from "react-native-reanimated";
-import Animated from "react-native-reanimated";
 
 export default function CameraPage() {
+
   const [flash, setFlash] = useState<FlashMode>("off");
 
   const [photoSelected, setPhotoSelected] = useState(true);
+
+
+
   const [postition, setPosition] = useState<CameraType>("back");
   const { path } = usePath();
 
@@ -47,20 +41,8 @@ export default function CameraPage() {
 
   const [recording, setRecording] = useState<boolean>(false);
 
-  const photoSelectedExp = photoSelected ? "black" : "white";
-  const videoSelectedExp = !photoSelected ? "black" : "white";
 
-  const AnimatedMaterialIcon = Animated.createAnimatedComponent(MaterialIcons);
 
-  const sv = useSharedValue(0);
-
-  const animatedStyle = useAnimatedStyle(() => {
-    return {
-      backgroundColor: interpolateColor(sv.value, [0, 1], ["#020202", "#F60808"], "RGB", {
-        gamma: 0.1,
-      }),
-    };
-  });
 
   const takePhoto = async () => {
     const photo = await cameraRef?.current?.takePictureAsync({
@@ -76,47 +58,53 @@ export default function CameraPage() {
   };
 
   const onPressPicture = () => {
-    sv.value = withTiming(0);
-    // Animate to 0
+    // sv.value = withTiming("black");
     setRecording(false);
     setPhotoSelected(true);
+
   };
 
   const onPressVideo = () => {
-    sv.value = withTiming(1); // Animate to 1
+    // sv.value = withTiming("red"); 
     setPhotoSelected(false);
   };
 
   const startRecording = async () => {
-    setRecording(true);
-    const result = await cameraRef.current?.recordAsync();
-    console.log("====================================");
-    console.log(result);
-    console.log("tesr");
-
-    console.log("====================================");
+    try {
+      const result = await cameraRef.current?.recordAsync();
+      
+      console.log(result);
+      setRecording(true);
+      
+    } catch (error) {
+      console.log(error);
+      
+    }
+    
   };
 
   const stopRecording = () => {
     cameraRef.current?.stopRecording();
-
     setRecording(false);
   };
+  
+  //FIXME [Error: Video recording failed: Recording was stopped before any data could be produced.]
 
-  const takeVideo = () => {
-    setRecording(!recording);
+  const takeVideo = () => {    
     if (recording) stopRecording();
     else startRecording();
+    setRecording(!recording)
+    
   };
 
-  return (
+return (
     <SafeAreaView style={{ flex: 1 }}>
       <CameraView
         style={StyleSheet.absoluteFill}
         ref={cameraRef}
-        mode={photoSelected ? "picture" : "video"}
         flash={flash}
       />
+        <AnimatedMaterialIcon photoSelected={photoSelected}  recording={recording}  takePhoto={takePhoto} takeVideo={takeVideo}/>
 
       <Ionicons
         name={flash === "off" ? "flash-off" : "flash"}
@@ -146,14 +134,6 @@ export default function CameraPage() {
         />
       </View>
 
-      <AnimatedMaterialIcon
-        entering={ZoomIn.springify().damping(60).mass(2).stiffness(30).restSpeedThreshold(1)}
-        name={photoSelected ? "camera" : recording ? "stop" : "camera"}
-        size={wp(18)}
-        color="white"
-        style={[styles.icon, animatedStyle]}
-        onPress={photoSelected ? takePhoto : takeVideo}
-      />
     </SafeAreaView>
   );
 }
