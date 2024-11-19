@@ -3,7 +3,7 @@ import Animated, { interpolateColor, SharedValue, useAnimatedStyle, useSharedVal
 
 import { StyleSheet } from "react-native";
 import { hp, wp } from "../../utils/dimonsions";
-import { memo } from "react";
+import { memo, useEffect } from "react";
 
 interface Props  {
 
@@ -13,20 +13,18 @@ interface Props  {
     takeVideo : ()=> void
 }
 
-const AnimatedMaterialIcon = Animated.createAnimatedComponent(MaterialIcons);
-
 export default memo(function AnimatedMaterialIconComponent ({ photoSelected, recording, takePhoto, takeVideo
 } :Props) {
-
-  const sv = useSharedValue("black");
-
-  console.log(photoSelected);
   
-  const animatedStyle = useAnimatedStyle(() => {
-      return {
-          backgroundColor: photoSelected ? sv.value = "black": sv.value = "red"
-        };
-    });
+  const AnimatedMaterialIcon = Animated.createAnimatedComponent(MaterialIcons);
+
+  const backgroundColor = useSharedValue("black");
+
+  useEffect(()=> {
+    photoSelected ? backgroundColor.value = withTiming("black"): backgroundColor.value = withTiming("red")
+  },[photoSelected])
+
+  
     
     return (
         <AnimatedMaterialIcon
@@ -34,7 +32,9 @@ export default memo(function AnimatedMaterialIconComponent ({ photoSelected, rec
             name={photoSelected ? "camera" : recording ? "stop" : "camera"}
             size={wp(18)}
             color="white"
-            style={[styles.icon, animatedStyle]}
+            style={[styles.icon,  {
+              backgroundColor
+              }]}
             onPress={photoSelected ? takePhoto : takeVideo}
         />
     );
