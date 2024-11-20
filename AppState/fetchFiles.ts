@@ -7,6 +7,9 @@ import { ReactNativeBlobUtilStat } from "react-native-blob-util";
 import { fs, initialPath, media } from "../utils/constant";
 import { CameraCapturedPicture } from "expo-camera";
 import { ToastAndroid } from "react-native";
+import { usePath } from "./pathstate";
+
+
 
 type FileFetchProp = {
   folders: ReactNativeBlobUtilStat[];
@@ -25,9 +28,9 @@ type FileFetchProp = {
 
   createImageFile: (path: string, photo: CameraCapturedPicture | undefined) => Promise<void>;
   createFolder: (folderName: string, path: string) => Promise<void>;
-  deleteFiles: (selectedFiles: ReactNativeBlobUtilStat[]) => Promise<void>;
-  editFile: (selectedFile: ReactNativeBlobUtilStat, name: string) => Promise<void>;
-  shareFiles: (selectedFiles: ReactNativeBlobUtilStat[]) => void;
+  deleteFiles: (selectedFilesPath:string | string[]) => Promise<void>;
+  editFile: (selectedFilePath: string,parentPath: string | string[], name: string) => Promise<void>;
+  shareFiles: (selectedFilesPath: string|string[]) => void;
 };
 
 export const useFileFetch = create<FileFetchProp>((set, get) => ({
@@ -39,9 +42,7 @@ export const useFileFetch = create<FileFetchProp>((set, get) => ({
   imagesLength: 0,
   selectedFolders: [],
   selectedImages: [],
-  containedPhotoInEachPath: {
-    initialPath: 0,
-  },
+
   getItemIndex: (item: ReactNativeBlobUtilStat) =>
     get().images.findIndex((image) => image.path === item.path),
   getImage: (path: string | string[]) => get().images.filter((e) => e.path === path)[0],
@@ -106,32 +107,45 @@ export const useFileFetch = create<FileFetchProp>((set, get) => ({
       console.log(error);
     }
   },
-  deleteFiles: async (selectedFiles: ReactNativeBlobUtilStat[]) => {
-    selectedFiles.forEach((element) => {
-      fs.unlink(element.path).catch((e) => {
+  deleteFiles: async (selectedFilesPath: string | string[]) => {
+   
+    if( Array.isArray(selectedFilesPath)){
+    selectedFilesPath.forEach((element) => {
+      fs.unlink(element).catch((e) => {
         console.log(e);
       });
-    });
+    })
+   }
+   else {
+        try {
+          await fs.unlink(selectedFilesPath);
+        } catch (e) { 
+          console.log(e);
+        }
+
+      } 
     set((state) => ({ notify: !state.notify }));
   },
-  editFile: async (selectedFile: ReactNativeBlobUtilStat, name: string) => {
+  editFile: async (  selectedFilePath: string,parentPath : string | string[], name: string) => {
+
+    console.log( selectedFilePath , '\n' , `file://${parentPath}/${name}.png`);
+    
     try {
-      await fs.cp(
-        selectedFile.path,
-        `${selectedFile.path.substring(0, selectedFile.path.lastIndexOf("/"))}/${name}`
-      );
-      await fs.unlink(selectedFile.path);
+      await media.writeToMediafile(`file://${parentPath}/${name}.png`,selectedFilePath)
+    
+      await fs.unlink(selectedFilePath);
     } catch (e) {
       console.log(e);
     }
+
+
     set((state) => ({ notify: !state.notify }));
   },
 
-  shareFiles: (selectedFiles: ReactNativeBlobUtilStat[]) => {
-    let urls: string[] = [];
-    selectedFiles.map((e) => {
-      urls.push(e.path);
-    });
-    Share.open({ urls: urls });
+  shareFiles: (selectedFilesPath:string | string[]) => {
+
+    Array.isArray(selectedFilesPath) ? Share.open({ urls:selectedFilesPath }): Share.open({
+      url: selectedFilesPath
+    })
   },
 }));

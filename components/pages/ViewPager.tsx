@@ -1,15 +1,24 @@
 import { Image } from "expo-image";
 import { useEffect, useState } from "react";
-import { Directions, Gesture, GestureDetector } from "react-native-gesture-handler";
+import {
+  Directions,
+  Gesture,
+  GestureDetector,
+} from "react-native-gesture-handler";
 import { Surface } from "react-native-paper";
-import Animated, { FadeIn, SlideInLeft, SlideInRight } from "react-native-reanimated";
+import Animated, {
+  FadeIn,
+  SlideInLeft,
+  SlideInRight,
+} from "react-native-reanimated";
 import { useFileFetch } from "../../AppState/fetchFiles";
 import { hp, wp } from "../../utils/dimonsions";
 
 import { Entypo, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { View } from "react-native";
 import Share from "react-native-share";
-import { useLayoutState } from "../../AppState/fabvisible";
+import { useDialogFolder, useLayoutState } from "../../AppState/fabvisible";
+import FileEditDialog from "@components/PaperComponent/DialogFolder";
 
 interface Prpos {
   setFileName: React.Dispatch<React.SetStateAction<string | string[]>>;
@@ -17,14 +26,18 @@ interface Prpos {
 }
 
 export default function PageView({ path, setFileName }: Prpos) {
-  const { getImage, images, editFile } = useFileFetch();
+  const { getImage, images, deleteFiles, shareFiles } = useFileFetch();
 
   const { setFabVisible } = useLayoutState();
+
+  const { showDialog } = useDialogFolder();
 
   const [displayedPath, setDisplayedPath] = useState<string | string[]>(path);
   const item = getImage(displayedPath);
 
-  const [selectedItem, setSelectedItem] = useState<number>(images.indexOf(item));
+  const [selectedItem, setSelectedItem] = useState<number>(
+    images.indexOf(item)
+  );
 
   useEffect(() => {
     setFabVisible(false);
@@ -105,7 +118,7 @@ export default function PageView({ path, setFileName }: Prpos) {
           size={wp(8)}
           color="black"
           onPress={() => {
-            Share.open({ url: `file://${displayedPath.toLocaleString()}` });
+            shareFiles(`file://${displayedPath.toLocaleString()}`);
           }}
         />
         <Feather
@@ -113,11 +126,25 @@ export default function PageView({ path, setFileName }: Prpos) {
           size={wp(8)}
           color="black"
           onPress={() => {
+            showDialog();
             setEntering(EnteringProps.NULL);
           }}
         />
-        <MaterialCommunityIcons name="delete" size={wp(8)} color="black" />
+        <MaterialCommunityIcons
+          name="delete"
+          size={wp(8)}
+          color="black"
+          onPress={() => {
+            deleteFiles(displayedPath);
+          }}
+        />
       </View>
+
+      <FileEditDialog
+        isFolder={false}
+        text="File Name"
+        filePath={`file://${displayedPath.toLocaleString()}`}
+      />
     </>
   );
 }

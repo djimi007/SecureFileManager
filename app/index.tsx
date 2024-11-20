@@ -30,6 +30,8 @@ const index = () => {
 
   const setFabVisible = useLayoutState((state) => state.setFabVisible);
 
+  const [hasStoragePermission, setHasStoragePermisson] = useState(false);
+
   const [hasCamPermission, requestCamPermission] = useCameraPermissions();
 
   const [hasMicPermission, requestMicPermission] = useMicrophonePermissions();
@@ -52,11 +54,8 @@ const index = () => {
   };
 
   const askExternalStoragePermission = async () => {
-    const isExternalStorageAvalible = await checkStoragePermission();
-    console.log("====================================");
-    console.log(isExternalStorageAvalible);
-    console.log("====================================");
-    if (!isExternalStorageAvalible) return requestExternalStroragePermission();
+    setHasStoragePermisson(await checkStoragePermission());
+    if (!hasStoragePermission) return requestExternalStroragePermission();
   };
 
   const compose = Gesture.Race(
@@ -85,16 +84,18 @@ const index = () => {
         setSelectedItem(1);
         break;
       case 1:
-        askExternalStoragePermission();
-        setSelectedItem(selectedItem + 1);
+        hasStoragePermission
+          ? setSelectedItem(selectedItem + 1)
+          : askExternalStoragePermission();
         break;
       case 2:
-        askCameraPermission();
-        setSelectedItem(selectedItem + 1);
+        hasCamPermission
+          ? setSelectedItem(selectedItem + 1)
+          : askCameraPermission();
+
         break;
       case 3:
-        askMicPermission();
-        router.replace("/(tabs)");
+        hasMicPermission ? router.replace("/(tabs)") : askMicPermission();
         setFirstLaunch(false);
         break;
     }
@@ -110,7 +111,9 @@ const index = () => {
             <PageComponent selectedItem={selectedItem} />
             <Pressable style={styles.nextButton} onPress={movmentPage}>
               <Text style={{ fontSize: wp(5), color: "white" }}>
-                {selectedItem === 0 ? "Next" : `Enable ${pages[selectedItem].title}`}
+                {selectedItem === 0
+                  ? "Next"
+                  : `Enable ${pages[selectedItem].title}`}
               </Text>
             </Pressable>
           </View>

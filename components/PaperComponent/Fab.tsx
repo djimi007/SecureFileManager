@@ -1,16 +1,14 @@
 import * as React from "react";
-import { FAB, Portal, PaperProvider } from "react-native-paper";
-import { hp } from "../../utils/dimonsions";
+import { FAB, Portal } from "react-native-paper";
 import { useDialogFolder, useLayoutState } from "../../AppState/fabvisible";
-
-import FolderCreation from "./DialogFolder";
+import { hp } from "../../utils/dimonsions";
 
 const FabGroup = () => {
   const [state, setState] = React.useState({ open: false });
 
   const visibleFab = useLayoutState((state) => state.visibleFab);
 
-  const { visible, showDialog, dimissDialog } = useDialogFolder();
+  const { showDialog } = useDialogFolder();
 
   const onStateChange = ({ open }: { open: boolean }) => setState({ open });
 

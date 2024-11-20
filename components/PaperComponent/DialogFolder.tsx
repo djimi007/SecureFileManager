@@ -6,13 +6,19 @@ import { useFileFetch } from "../../AppState/fetchFiles";
 import { useDialogFolder } from "../../AppState/fabvisible";
 import { usePath } from "../../AppState/pathstate";
 
-const FolderCreation = () => {
+interface Props {
+  text: string;
+  isFolder: boolean;
+  filePath: string | undefined;
+}
+
+const FileEditDialog = ({ text, isFolder, filePath }: Props) => {
   const { visible, dimissDialog } = useDialogFolder();
 
-  const [folderName, setFolderName] = useState("");
+  const [fileName, setFileName] = useState("");
   const { path } = usePath();
 
-  const createFolder = useFileFetch((state) => state.createFolder);
+  const { createFolder, editFile } = useFileFetch();
 
   return (
     <>
@@ -22,7 +28,7 @@ const FolderCreation = () => {
           onDismiss={dimissDialog}
           contentContainerStyle={styles.containerStyle}
         >
-          <Text style={styles.text}>Create New Folder</Text>
+          <Text style={styles.text}>{text}</Text>
           <TextInput
             mode="outlined"
             label="Folder Name"
@@ -32,14 +38,16 @@ const FolderCreation = () => {
             outlineStyle={styles.outLine}
             activeOutlineColor="#000"
             contentStyle={styles.contentStyle}
-            onChangeText={setFolderName}
-            value={folderName}
+            onChangeText={setFileName}
+            value={fileName}
           />
           <Button
             mode="contained"
             onPress={() => {
               // Call createFolder here
-              (async () => await createFolder(folderName, path))();
+              isFolder
+                ? (async () => await createFolder(fileName, path))()
+                : editFile(filePath!, path, fileName);
               dimissDialog();
             }}
             style={{
@@ -55,7 +63,7 @@ const FolderCreation = () => {
               color: "white",
             }}
           >
-            Create Folder
+            Save
           </Button>
         </Modal>
       </Portal>
@@ -93,4 +101,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FolderCreation;
+export default FileEditDialog;

@@ -16,10 +16,9 @@ import { useFoucsed } from "../../AppState/backState";
 import useSecureApp from "../../AppState/secureApp";
 
 import { useFocusEffect } from "@react-navigation/native";
-
-import FolderCreation from "@components/PaperComponent/DialogFolder";
 import FabGroup from "@components/PaperComponent/Fab";
 import { Alerte } from "../../utils/alert";
+import FileEditDialog from "@components/PaperComponent/DialogFolder";
 
 export default function App() {
   const { folders, getDir, dirLength, notify } = useFileFetch();
@@ -81,7 +80,11 @@ export default function App() {
         />
       </View>
       {visibleFab && <FabGroup />}
-      <FolderCreation />
+      <FileEditDialog
+        isFolder={true}
+        text="Create Folder"
+        filePath={undefined}
+      />
     </View>
   );
 }
