@@ -87,6 +87,7 @@ export default function CameraPage() {
         facing={position}
         mode={photoSelected ? "picture" : "video"}
         enableTorch={flash}
+        autofocus="on"
       />
 
       <AnimatedMaterialIcon

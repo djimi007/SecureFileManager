@@ -61,21 +61,16 @@ const index = () => {
   const compose = Gesture.Race(
     Gesture.Fling()
       .direction(Directions.RIGHT)
-
-      .onEnd(
-        runOnJS(() => {
-          if (selectedItem < 1) return;
-          setSelectedItem(selectedItem - 1);
-        })
-      ),
+      .onEnd(() => {
+        "worklet";
+        runOnJS(setSelectedItem)(selectedItem - 1);
+      }),
     Gesture.Fling()
       .direction(Directions.LEFT)
-      .onEnd(
-        runOnJS(() => {
-          if (selectedItem > 2) return;
-          setSelectedItem(selectedItem + 1);
-        })
-      )
+      .onEnd(() => {
+        "worklet";
+        runOnJS(setSelectedItem)(selectedItem + 1);
+      })
   );
 
   const movmentPage = async () => {

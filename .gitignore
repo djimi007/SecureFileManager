@@ -43,6 +43,6 @@ expo-env.d.ts
 nativewind-env.d.
 
 
-/android 
-/ios
+android/ 
+ios/
 .env
