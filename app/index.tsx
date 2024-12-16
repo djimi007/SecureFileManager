@@ -23,6 +23,7 @@ import { useLayoutState } from "../AppState/fabvisible";
 import { useFirstLaunch } from "../AppState/firstlaunch";
 import { usePermissions } from "../hooks/usePermission";
 import { useCameraPermissions, useMicrophonePermissions } from "expo-camera";
+import { useExternalStoragePermission } from "../AppState/permission";
 const index = () => {
   const [selectedItem, setSelectedItem] = useState(0);
 
@@ -30,7 +31,8 @@ const index = () => {
 
   const setFabVisible = useLayoutState((state) => state.setFabVisible);
 
-  const [hasStoragePermission, setHasStoragePermisson] = useState(false);
+  const { hasExternalStoragePermission, setExternalStoragePermission } =
+    useExternalStoragePermission();
 
   const [hasCamPermission, requestCamPermission] = useCameraPermissions();
 
@@ -54,8 +56,9 @@ const index = () => {
   };
 
   const askExternalStoragePermission = async () => {
-    setHasStoragePermisson(await checkStoragePermission());
-    if (!hasStoragePermission) return requestExternalStroragePermission();
+    setExternalStoragePermission(await checkStoragePermission());
+    if (!hasExternalStoragePermission)
+      return requestExternalStroragePermission();
   };
 
   const compose = Gesture.Race(
@@ -79,42 +82,48 @@ const index = () => {
         setSelectedItem(1);
         break;
       case 1:
-        hasStoragePermission
+        hasExternalStoragePermission
           ? setSelectedItem(selectedItem + 1)
           : askExternalStoragePermission();
         break;
       case 2:
-        hasCamPermission
+        hasCamPermission?.granted
           ? setSelectedItem(selectedItem + 1)
           : askCameraPermission();
-
         break;
       case 3:
-        hasMicPermission ? router.replace("/(tabs)") : askMicPermission();
-        setFirstLaunch(false);
+        hasMicPermission?.granted
+          ? router.replace("/(tabs)")
+          : askMicPermission();
         break;
     }
   };
 
-  if (!firstLaunch && permissionAgreed) return <Redirect href={"/(tabs)"} />;
-
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "black", padding: 20 }}>
-      <GestureHandlerRootView style={{ flex: 1 }}>
-        <GestureDetector gesture={compose}>
-          <View style={{ flex: 1 }}>
-            <PageComponent selectedItem={selectedItem} />
-            <Pressable style={styles.nextButton} onPress={movmentPage}>
-              <Text style={{ fontSize: wp(5), color: "white" }}>
-                {selectedItem === 0
-                  ? "Next"
-                  : `Enable ${pages[selectedItem].title}`}
-              </Text>
-            </Pressable>
-          </View>
-        </GestureDetector>
-      </GestureHandlerRootView>
-    </SafeAreaView>
+    <>
+      {!firstLaunch && permissionAgreed ? (
+        <Redirect href={"/(tabs)"} />
+      ) : (
+        <SafeAreaView
+          style={{ flex: 1, backgroundColor: "black", padding: 20 }}
+        >
+          <GestureHandlerRootView style={{ flex: 1 }}>
+            <GestureDetector gesture={compose}>
+              <View style={{ flex: 1 }}>
+                <PageComponent selectedItem={selectedItem} />
+                <Pressable style={styles.nextButton} onPress={movmentPage}>
+                  <Text style={{ fontSize: wp(5), color: "white" }}>
+                    {selectedItem === 0
+                      ? "Next"
+                      : `Enable ${pages[selectedItem].title}`}
+                  </Text>
+                </Pressable>
+              </View>
+            </GestureDetector>
+          </GestureHandlerRootView>
+        </SafeAreaView>
+      )}
+    </>
   );
 };
 

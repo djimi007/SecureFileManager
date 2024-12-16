@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, View, Pressable, Text } from "react-native";
 
 import FolderItem from "@components/pages/FolderItem";
 

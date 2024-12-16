@@ -1,7 +1,6 @@
 import { Image } from "expo-image";
 import { Tabs } from "expo-router";
 import { View } from "react-native";
-import { createMaterialBottomTabNavigator } from "react-native-paper/react-navigation";
 import { useFoucsed } from "../../AppState/backState";
 import { useLayoutState } from "../../AppState/fabvisible";
 import { Colors } from "../../constants/Colors";
@@ -13,7 +12,6 @@ import {
   WhiteFolderTab,
 } from "../../utils/pages&svgUtils";
 
-const Tab = createMaterialBottomTabNavigator();
 export default function MyTabs() {
   const setFabVisible = useLayoutState((state) => state.setFabVisible);
 
@@ -24,25 +22,24 @@ export default function MyTabs() {
       screenOptions={{
         title: "ProGallery",
         headerTitleStyle: { fontSize: wp(6) },
-        tabBarActiveTintColor: "black",
         headerTintColor: "white",
         tabBarShowLabel: false,
+        headerStyle: { backgroundColor: "black" },
+        tabBarStyle: {
+          backgroundColor: Colors.background,
+          paddingVertical: hp(5),
+        },
         headerRight: () => (
           <Image
-            style={{ tintColor: "white", height: wp(6), width: wp(5), marginRight: wp(4) }}
+            style={{
+              tintColor: "white",
+              height: wp(6),
+              width: wp(5),
+              marginRight: wp(4),
+            }}
             source={require("@/assets/data/change.png")}
           />
         ),
-        headerStyle: { backgroundColor: "black" },
-        tabBarStyle: {
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: Colors.background,
-          height: hp(8),
-        },
-        headerBackgroundContainerStyle: {
-          backgroundColor: "black",
-        },
       }}
     >
       <Tabs.Screen
@@ -56,7 +53,13 @@ export default function MyTabs() {
         options={{
           tabBarIcon: ({ focused }) =>
             focused ? (
-              <View style={{ padding: wp(3), backgroundColor: "black", borderRadius: wp(2.5) }}>
+              <View
+                style={{
+                  padding: wp(2),
+                  backgroundColor: "black",
+                  borderRadius: wp(2.5),
+                }}
+              >
                 <WhiteFolderTab height={wp(7)} width={wp(7)} />
               </View>
             ) : (
@@ -77,7 +80,13 @@ export default function MyTabs() {
         options={{
           tabBarIcon: ({ focused }) =>
             focused ? (
-              <View style={{ padding: wp(4), backgroundColor: "black", borderRadius: wp(2.5) }}>
+              <View
+                style={{
+                  padding: wp(3),
+                  backgroundColor: "black",
+                  borderRadius: wp(2.5),
+                }}
+              >
                 <Image
                   source={require("@/assets/data/milieux.png")}
                   style={{ height: wp(6), width: wp(6) }}
@@ -102,7 +111,13 @@ export default function MyTabs() {
         options={{
           tabBarIcon: ({ focused }) =>
             focused ? (
-              <View style={{ padding: wp(3), backgroundColor: "black", borderRadius: wp(2.5) }}>
+              <View
+                style={{
+                  padding: wp(2),
+                  backgroundColor: "black",
+                  borderRadius: wp(2.5),
+                }}
+              >
                 <WhiteCameraTab height={wp(7)} width={wp(8)} />
               </View>
             ) : (

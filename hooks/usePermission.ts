@@ -17,7 +17,11 @@ export const usePermissions = () => {
       const hasExternalPermission = await checkStoragePermission();
 
       setExternalSrorage(hasExternalPermission);
-      if (hasCamPermission?.granted && hasMicPermission?.granted && hasExternalPermission) {
+      if (
+        hasCamPermission?.granted &&
+        hasMicPermission?.granted &&
+        hasExternalPermission
+      ) {
         setValue(true);
       } else {
         setValue(false);
@@ -25,7 +29,11 @@ export const usePermissions = () => {
     };
 
     checkPermissions();
-  }, [hasCamPermission?.granted, hasMicPermission?.granted, hasExternalStorage]);
+  }, [
+    hasCamPermission?.granted,
+    hasMicPermission?.granted,
+    hasExternalStorage,
+  ]);
 
   return value;
 };

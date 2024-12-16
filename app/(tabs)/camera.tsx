@@ -80,7 +80,7 @@ export default function CameraPage() {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <View style={{ flex: 1 }}>
       <CameraView
         style={StyleSheet.absoluteFill}
         ref={cameraRef}
@@ -127,7 +127,7 @@ export default function CameraPage() {
           onPress={onPressVideo}
         />
       </View>
-    </SafeAreaView>
+    </View>
   );
 }
 

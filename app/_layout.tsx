@@ -24,13 +24,10 @@ function RootLayoutNav() {
         <Stack
           screenOptions={{
             title: "ProGallery",
-            statusBarColor: "black",
             headerShown: false,
+            statusBarBackgroundColor: "black",
           }}
-        >
-          <Stack.Screen name="index" />
-          <Stack.Screen name="(tabs)" />
-        </Stack>
+        />
       </PaperProvider>
     </GestureHandlerRootView>
   );
