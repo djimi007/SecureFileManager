@@ -57,7 +57,8 @@ const index = () => {
   };
 
   const askExternalStoragePermission = async () => {
-    setExternalStoragePermission(await checkStoragePermission());
+    const checkedPermission = await checkStoragePermission();
+    setExternalStoragePermission(checkedPermission);
     if (!hasExternalStoragePermission)
       return requestExternalStroragePermission();
   };

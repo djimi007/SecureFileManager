@@ -1,6 +1,6 @@
 import { Image } from "expo-image";
 import { Tabs } from "expo-router";
-import { View } from "react-native";
+import { Animated, View } from "react-native";
 import { useFoucsed } from "../../AppState/backState";
 import { useLayoutState } from "../../AppState/fabvisible";
 import { Colors } from "../../constants/Colors";
@@ -26,8 +26,10 @@ export default function MyTabs() {
         tabBarShowLabel: false,
         headerStyle: { backgroundColor: "black" },
         tabBarStyle: {
+          alignItems: "center",
+          justifyContent: "center",
+          height: hp(8),
           backgroundColor: Colors.background,
-          paddingVertical: hp(5),
         },
         headerRight: () => (
           <Image
@@ -58,12 +60,13 @@ export default function MyTabs() {
                   padding: wp(2),
                   backgroundColor: "black",
                   borderRadius: wp(2.5),
+                  marginTop: hp(3),
                 }}
               >
                 <WhiteFolderTab height={wp(7)} width={wp(7)} />
               </View>
             ) : (
-              <View>
+              <View style={{ marginTop: hp(3) }}>
                 <BlackFolderTab height={wp(7)} width={wp(7)} />
               </View>
             ),
@@ -85,6 +88,7 @@ export default function MyTabs() {
                   padding: wp(3),
                   backgroundColor: "black",
                   borderRadius: wp(2.5),
+                  marginTop: hp(3),
                 }}
               >
                 <Image
@@ -95,7 +99,12 @@ export default function MyTabs() {
             ) : (
               <Image
                 source={require("@/assets/data/milieux.png")}
-                style={{ height: wp(6), width: wp(6), tintColor: "black" }}
+                style={{
+                  height: wp(6),
+                  width: wp(6),
+                  tintColor: "black",
+                  marginTop: hp(3),
+                }}
               />
             ),
         }}
@@ -116,12 +125,17 @@ export default function MyTabs() {
                   padding: wp(2),
                   backgroundColor: "black",
                   borderRadius: wp(2.5),
+                  marginTop: hp(3),
                 }}
               >
                 <WhiteCameraTab height={wp(7)} width={wp(8)} />
               </View>
             ) : (
-              <BlackCameraTab height={wp(7)} width={wp(8)} />
+              <BlackCameraTab
+                style={{ marginTop: hp(3) }}
+                height={wp(7)}
+                width={wp(8)}
+              />
             ),
         }}
       />
