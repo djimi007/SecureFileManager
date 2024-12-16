@@ -42,6 +42,7 @@ const index = () => {
 
   useEffect(() => {
     setFabVisible(false);
+    setFirstLaunch(false);
   }, []);
 
   const askCameraPermission = async () => {
